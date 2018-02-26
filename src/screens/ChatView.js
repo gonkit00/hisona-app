@@ -9,6 +9,11 @@ import {
 	TouchableHighlight,
 	Keyboard
 } from 'react-native';
+
+import { connect } from 'react-redux';
+import * as chatActions from '~/store/Chats/actions';
+import * as chatSelectors from '~/store/Chats/reducer';
+
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 
@@ -16,7 +21,7 @@ import { ScreenHeader } from '~/components/ScreenHeader';
 import { MessageBubble } from '~/components/MessageBubble';
 import { ChatInput } from '~/components/ChatInput';
 
-export default class ChatView extends Component {
+class ChatView extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -160,7 +165,7 @@ export default class ChatView extends Component {
 
 		return (
 			<View style={styles.outer}>
-        <ScreenHeader />
+				<ScreenHeader />
 				<ScrollView
 					ref={ref => {
 						this.scrollView = ref;
@@ -193,3 +198,14 @@ const styles = StyleSheet.create({
 		flex: 1
 	}
 });
+
+const mapStateToProps = state => {
+	// const [eventsById, eventsByIdArray] = eventSelectors.getEvents(state);
+	const isFetching = chatSelectors.isFetching(state);
+
+	return {
+		isFetching
+	};
+};
+
+export default connect(mapStateToProps)(ChatView);
