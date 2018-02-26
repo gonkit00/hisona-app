@@ -12,8 +12,9 @@ import {
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 
-import { MessageBubble } from './components/MessageBubble';
-import { ChatInput } from './components/ChatInput';
+import { ScreenHeader } from '~/components/ScreenHeader';
+import { MessageBubble } from '~/components/MessageBubble';
+import { ChatInput } from '~/components/ChatInput';
 
 export default class ChatView extends Component {
 	constructor(props) {
@@ -159,6 +160,7 @@ export default class ChatView extends Component {
 
 		return (
 			<View style={styles.outer}>
+        <ScreenHeader />
 				<ScrollView
 					ref={ref => {
 						this.scrollView = ref;

@@ -1,13 +1,6 @@
-import React, { Component } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import AppContainer from './src/AppContainer';
 
-import ChatsListScreen from './ChatsListScreen';
-import ChatView from './ChatView';
-
-class App extends Component {
-	render() {
-		return <ChatView />;
-	}
-}
+const App = () => <AppContainer />;
 
 export default App;
