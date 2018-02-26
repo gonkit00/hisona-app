@@ -20,6 +20,7 @@ import AutogrowInput from 'react-native-autogrow-input';
 import { ScreenHeader } from '~/components/ScreenHeader';
 import { MessageBubble } from '~/components/MessageBubble';
 import { ChatInput } from '~/components/ChatInput';
+import { Loader } from '~/components/Loader';
 
 class ChatView extends Component {
 	constructor(props) {
@@ -29,10 +30,6 @@ class ChatView extends Component {
 			inputBarText: ''
 		};
 	}
-
-	static navigationOptions = {
-		title: 'Chat'
-	};
 
 	// get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
 	componentWillMount() {
@@ -49,15 +46,7 @@ class ChatView extends Component {
 	}
 
 	getMessages() {
-		fetch(`http:localhost:8081/api/v1/user/conversations/thread`)
-			.then(response => response.json())
-			.then(result => {
-				this.setState({
-					messages: result || [],
-					isLoading: false
-				});
-			})
-			.catch(err => console.error(err));
+		this.props.dispatch(chatActions.getThread());
 	}
 
 	getReply(text) {
@@ -150,39 +139,37 @@ class ChatView extends Component {
 		});
 	}
 
+	_renderLoading = () => <Loader />;
+
 	render() {
-		const messages = [];
-
-		this.state.messages.forEach((message, index) => {
-			messages.push(
-				<MessageBubble
-					key={index}
-					direction={message.direction}
-					text={message.text}
-				/>
-			);
-		});
-
-		return (
-			<View style={styles.outer}>
-				<ScreenHeader />
-				<ScrollView
-					ref={ref => {
-						this.scrollView = ref;
-					}}
-					style={styles.messages}
-				>
-					{messages}
-				</ScrollView>
-				<ChatInput
-					onSendPressed={() => this._sendMessage()}
-					onSizeChange={() => this._onInputSizeChange()}
-					onChangeText={text => this._onChangeInputBarText(text)}
-					text={this.state.inputBarText}
-				/>
-				<KeyboardSpacer />
-			</View>
-		);
+    return (
+      <View style={styles.outer}>
+        <ScreenHeader />
+        <ScrollView
+          ref={ref => {
+            this.scrollView = ref;
+          }}
+          style={styles.messages}
+        >
+          {this.props.isLoading
+            ? this._renderLoading()
+            : this.props.currentThread.map((message, index) => (
+              <MessageBubble
+                key={index}
+                direction={message.direction}
+                text={message.text}
+              />
+          ))}
+        </ScrollView>
+        <ChatInput
+          onSendPressed={() => this._sendMessage()}
+          onSizeChange={() => this._onInputSizeChange()}
+          onChangeText={text => this._onChangeInputBarText(text)}
+          text={this.state.inputBarText}
+        />
+        <KeyboardSpacer />
+      </View>
+    );
 	}
 }
 
@@ -201,10 +188,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
 	// const [eventsById, eventsByIdArray] = eventSelectors.getEvents(state);
-	const isFetching = chatSelectors.isFetching(state);
+	const currentThread = chatSelectors.getCurrentThread(state);
+	const isLoading = chatSelectors.isLoading(state);
 
 	return {
-		isFetching
+		isLoading,
+		currentThread
 	};
 };
 

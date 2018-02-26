@@ -4,15 +4,37 @@ import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
 	chatsById: undefined,
-	isFetching: false,
+	currentThread: [],
+	isLoading: false,
 	error: undefined
 });
 
 export default function reduce(state = initialState, action = {}) {
 	switch (action.type) {
 		case types.CHATS_FETCHED:
+			return state.merge({
+				isLoading: true
+			});
 		case types.CHATS_FETCHED_SUCCESS:
 		case types.CHATS_FETCHED_FAILURE:
+			return state.merge({
+				error: action.error.message,
+				isLoading: false
+			});
+		case types.CHATS_THREAD_FETCHED:
+			return state.merge({
+				isLoading: true
+			});
+		case types.CHATS_THREAD_FETCHED_SUCCESS:
+			return state.merge({
+				currentThread: action.thread,
+				isLoading: false
+			});
+		case types.CHATS_THREAD_FETCHED_FAILURE:
+			return state.merge({
+				error: action.error.message,
+				isLoading: false
+			});
 		case types.CHATS_NEW_CONVERSATION:
 		case types.CHATS_NEW_CONVERSATION_SUCCESS:
 			return state;
@@ -23,7 +45,12 @@ export default function reduce(state = initialState, action = {}) {
 
 /** Selectors */
 
-export const isFetching = state => {
-	const fetchingStatus = state.chats.isFetching;
-	return fetchingStatus;
+export const isLoading = state => {
+	const loadingStatus = state.chats.isLoading;
+	return loadingStatus;
+};
+
+export const getCurrentThread = state => {
+	const currentThread = state.chats.currentThread;
+	return currentThread;
 };
