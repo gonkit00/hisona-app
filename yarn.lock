@@ -5618,6 +5618,12 @@ react-native-gesture-handler@1.0.0-alpha.39:
     invariant "^2.2.2"
     prop-types "^15.5.10"
 
+react-native-indicators@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/react-native-indicators/-/react-native-indicators-0.12.0.tgz#97e7f0eff7dbef719ec4017d7909ba1677536175"
+  dependencies:
+    prop-types "^15.5.10"
+
 react-native-keyboard-spacer@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-spacer/-/react-native-keyboard-spacer-0.4.1.tgz#46f18a320432098a25ea9fa89f5143dd254d332d"

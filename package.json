@@ -30,6 +30,7 @@
     "react": "16.2.0",
     "react-native": "0.52.0",
     "react-native-autogrow-input": "^0.2.1",
+    "react-native-indicators": "^0.12.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-navigation": "^1.2.0",
     "react-redux": "^5.0.7",

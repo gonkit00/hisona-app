@@ -1,8 +1,7 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import { View, Text } from 'react-native';
+import { MaterialIndicator } from 'react-native-indicators';
 
-const Loader = () => {
- return <View><Text>Loading...</Text></View>
-}
+const Loader = () => <MaterialIndicator color="black" size="32" />;
 
-export default Loader
+export default Loader;
