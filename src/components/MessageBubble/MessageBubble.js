@@ -6,9 +6,9 @@ class MessageBubble extends Component {
 	render() {
 		// These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
 		const leftSpacer =
-			this.props.direction === 'left' ? null : <View style={{ width: 70 }} />;
+			this.props.direction === 'left' ? null : <View style={{ width: 80 }} />;
 		const rightSpacer =
-			this.props.direction === 'left' ? <View style={{ width: 70 }} /> : null;
+			this.props.direction === 'left' ? <View style={{ width: 80 }} /> : null;
 
 		const bubbleStyles =
 			this.props.direction === 'left'

@@ -22,11 +22,10 @@ import { MessageBubble } from '~/components/MessageBubble';
 import { ChatInput } from '~/components/ChatInput';
 import { Loader } from '~/components/Loader';
 
-class ChatView extends Component {
+class ChatScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			messages: [],
 			inputBarText: ''
 		};
 	}
@@ -46,33 +45,11 @@ class ChatView extends Component {
 	}
 
 	getMessages() {
-		this.props.dispatch(chatActions.getThread());
+		this.props.getThread();
 	}
 
-	getReply(text) {
-		const opts = {
-			artefact_id: '2_es_pub_christophercolumbus',
-			msgStr: text
-		};
-
-		fetch(`http:localhost:8081/api/v1/classification/construe/incoming`, {
-			method: 'POST',
-			body: JSON.stringify(opts)
-		})
-			.then(response => response.json())
-			.then(result => {
-				console.log(result);
-
-				const newReplyMessage = {
-					direction: 'left',
-					text: result.reply[0].body
-				};
-
-				this.setState({
-					messages: [...this.state.messages, newReplyMessage]
-				});
-			})
-			.catch(err => console.error(err));
+	_getReply(text) {
+		this.props.addReply(text);
 	}
 
 	componentWillUnmount() {
@@ -107,20 +84,18 @@ class ChatView extends Component {
 	}
 
 	_sendMessage() {
-		const text = this.state.inputBarText.toLowerCase();
-		const newMessage = {
-			direction: 'right',
-			text
-		};
+		const text = this.state.inputBarText.toLowerCase().trim();
+		const newMessage = { direction: 'right', text };
 
-		console.log(this.state.messages);
+		this.props.addMessage(newMessage);
 
-		const reply = this.getReply(text);
+		// TODO: Add typing indicator
+		setTimeout(() => {
+			this._getReply(text);
+		}, 1000);
 
-		this.setState({
-			messages: [...this.state.messages, newMessage],
-			inputBarText: ''
-		});
+		Keyboard.dismiss();
+		this.setState({ inputBarText: '' });
 	}
 
 	_onChangeInputBarText(text) {
@@ -129,10 +104,7 @@ class ChatView extends Component {
 		});
 	}
 
-	// This event fires way too often.
-	// We need to move the last message up if the input bar expands due to the user's new message exceeding the height of the box.
-	// We really only need to do anything when the height of the InputBar changes, but AutogrowInput can't tell us that.
-	// The real solution here is probably a fork of AutogrowInput that can provide this information.
+	// TODO: Throttle decorator
 	_onInputSizeChange() {
 		setTimeout(() => {
 			this.scrollView.scrollToEnd({ animated: false });
@@ -142,34 +114,34 @@ class ChatView extends Component {
 	_renderLoading = () => <Loader />;
 
 	render() {
-    return (
-      <View style={styles.outer}>
-        <ScreenHeader />
-        <ScrollView
-          ref={ref => {
-            this.scrollView = ref;
-          }}
-          style={styles.messages}
-        >
-          {this.props.isLoading
-            ? this._renderLoading()
-            : this.props.currentThread.map((message, index) => (
-              <MessageBubble
-                key={index}
-                direction={message.direction}
-                text={message.text}
-              />
-          ))}
-        </ScrollView>
-        <ChatInput
-          onSendPressed={() => this._sendMessage()}
-          onSizeChange={() => this._onInputSizeChange()}
-          onChangeText={text => this._onChangeInputBarText(text)}
-          text={this.state.inputBarText}
-        />
-        <KeyboardSpacer />
-      </View>
-    );
+		return (
+			<View style={styles.outer}>
+				<ScreenHeader />
+				<ScrollView
+					ref={ref => {
+						this.scrollView = ref;
+					}}
+					style={styles.messages}
+				>
+					{this.props.isLoading
+						? this._renderLoading()
+						: this.props.currentThread.map((message, index) => (
+								<MessageBubble
+									key={index}
+									direction={message.direction}
+									text={message.text}
+								/>
+							))}
+				</ScrollView>
+				<ChatInput
+					onSendPressed={() => this._sendMessage()}
+					onSizeChange={() => this._onInputSizeChange()}
+					onChangeText={text => this._onChangeInputBarText(text)}
+					text={this.state.inputBarText}
+				/>
+				<KeyboardSpacer />
+			</View>
+		);
 	}
 }
 
@@ -187,7 +159,6 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-	// const [eventsById, eventsByIdArray] = eventSelectors.getEvents(state);
 	const currentThread = chatSelectors.getCurrentThread(state);
 	const isLoading = chatSelectors.isLoading(state);
 
@@ -197,4 +168,12 @@ const mapStateToProps = state => {
 	};
 };
 
-export default connect(mapStateToProps)(ChatView);
+function mapDispatchToProps(dispatch) {
+	return {
+		getThread: () => dispatch(chatActions.getThread()),
+		addMessage: newMessage => dispatch(chatActions.addMessage(newMessage)),
+		addReply: text => dispatch(chatActions.addReply(text))
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

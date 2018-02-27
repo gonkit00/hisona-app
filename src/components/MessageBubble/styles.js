@@ -17,7 +17,7 @@ export default StyleSheet.create({
 	},
 
 	messageBubbleTextLeft: {
-		fontSize: 14,
+		fontSize: 15,
 		color: '#212121'
 	},
 
@@ -26,7 +26,7 @@ export default StyleSheet.create({
 	},
 
 	messageBubbleTextRight: {
-		fontSize: 14,
+		fontSize: 15,
 		color: 'white'
 	}
 });
