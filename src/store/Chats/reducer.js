@@ -3,7 +3,7 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
-	chatsById: undefined,
+	allChats: [],
 	currentArtefactId: undefined,
 	currentThread: [],
 	isLoading: false,
@@ -17,6 +17,10 @@ export default function reduce(state = initialState, action = {}) {
 				isLoading: true
 			});
 		case types.CHATS_FETCHED_SUCCESS:
+			return state.merge({
+				allChats: action.chats,
+				isLoading: false
+			});
 		case types.CHATS_FETCHED_FAILURE:
 			return state.merge({
 				error: action.error.message,
@@ -64,6 +68,11 @@ export default function reduce(state = initialState, action = {}) {
 export const isLoading = state => {
 	const loadingStatus = state.chats.isLoading;
 	return loadingStatus;
+};
+
+export const getChats = state => {
+	const chats = state.chats.allChats;
+	return chats;
 };
 
 export const getCurrentThread = state => {

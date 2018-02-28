@@ -3,6 +3,31 @@
 import keyBy from 'lodash/keyBy';
 import * as types from './actionTypes';
 import chatsService from '~/services/chats';
+import { Actions } from 'react-native-router-flux';
+
+export const getChats = () => async (dispatch, getState) => {
+	try {
+		dispatch({ type: types.CHATS_FETCHED });
+		const chats = await chatsService.fetchChats();
+
+		if (!chats) {
+			throw new Error('Chats fetch request failed');
+		}
+
+		// Normalise the events
+		// const chatsById = keyByIds(chats);
+		dispatch({
+			type: types.CHATS_FETCHED_SUCCESS,
+			chats
+		});
+	} catch (error) {
+		dispatch({ type: types.CHATS_FETCHED_FAILURE, error });
+	}
+};
+
+// export const openThread = () => {
+// 	Actions.chatScreen;
+// };
 
 export const getThread = () => async (dispatch, getState) => {
 	try {
@@ -13,8 +38,6 @@ export const getThread = () => async (dispatch, getState) => {
 			throw new Error('Thread fetch request failed');
 		}
 
-		// Normalise the events
-		// const eventsById = keyByIds(events);
 		dispatch({
 			type: types.CHATS_THREAD_FETCHED_SUCCESS,
 			thread
@@ -51,9 +74,12 @@ export const addReply = text => async (dispatch, getState) => {
 
 		dispatch({
 			type: types.CHATS_THREAD_REPLY_FETCHED_SUCCESS,
-	    replyMessage
+			replyMessage
 		});
 	} catch (error) {
 		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED_FAILURE, error });
 	}
 };
+
+// Normalise utilities
+const keyByIds = chats => keyBy(chats, chat => chat.conversation_id);

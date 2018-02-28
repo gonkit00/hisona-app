@@ -4,9 +4,27 @@
  *
  */
 
-const BASE_ENDPOINT = 'http://5ed8eb5a.ngrok.io/api/v1';
+const BASE_ENDPOINT = 'http://6f4e0a98.ngrok.io/api/v1';
 
-class ChatsService {
+const ChatsService = {
+	async fetchChats() {
+		const url = `${BASE_ENDPOINT}/user/conversations`;
+
+		try {
+			const response = await fetch(url);
+
+			if (!response.ok) {
+				throw new Error(`Failed to get a response from the '${url}' endpoint`);
+			}
+
+			// Response was ok
+			const conversations = await response.json();
+			return conversations;
+		} catch (error) {
+			console.error(error);
+		}
+	},
+
 	// todo accept thread ID
 	async fetchThread() {
 		const url = `${BASE_ENDPOINT}/user/conversations/thread`;
@@ -15,7 +33,7 @@ class ChatsService {
 			const response = await fetch(url);
 
 			if (!response.ok) {
-				throw new Error(`Failed to get thread from endpoint`);
+				throw new Error(`Failed to get a response from the '${url}' endpoint`);
 			}
 
 			// Response was ok
@@ -24,7 +42,7 @@ class ChatsService {
 		} catch (error) {
 			console.error(error);
 		}
-	}
+	},
 
 	async fetchReply(opts) {
 		const url = `${BASE_ENDPOINT}/classification/intent/classify`;
@@ -49,6 +67,6 @@ class ChatsService {
 			console.error(error);
 		}
 	}
-}
+};
 
-export default new ChatsService();
+export default ChatsService;
