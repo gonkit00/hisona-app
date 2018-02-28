@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, TextInput, TouchableHighlight } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import AutogrowInput from 'react-native-autogrow-input';
 import styles from './styles';
@@ -24,13 +25,13 @@ class ChatInput extends Component {
 					onChangeText={text => this.props.onChangeText(text)}
 					onContentSizeChange={this.props.onSizeChange}
 					value={this.props.text}
-          placeholder={"Ask a question..."}
+					placeholder={'Ask a question...'}
 				/>
 				<TouchableHighlight
 					style={styles.sendButton}
 					onPress={() => this.props.onSendPressed()}
 				>
-					<Text style={{ color: 'white' }}>Send</Text>
+					<Ionicons name="md-arrow-up" size={24} color="white" />
 				</TouchableHighlight>
 			</View>
 		);

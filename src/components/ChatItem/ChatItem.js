@@ -10,16 +10,23 @@ class ChatItem extends Component {
 	render() {
 		const { thread, onViewThread } = this.props;
 		return (
-			<View style={styles.container}>
-				<TouchableOpacity
-					activeOpacity={0.9}
-					onPress={onViewThread.bind(this, thread.conversation_id)}
-				>
-					<Text>{thread.artefact_name}</Text>
-					<Text>{thread.last_message_date}</Text>
-					<Text>{thread.last_message_subtitle}</Text>
-				</TouchableOpacity>
-			</View>
+			<TouchableOpacity
+				activeOpacity={0.9}
+				onPress={onViewThread.bind(this, thread.conversation_id)}
+			>
+				<View style={styles.container}>
+					<Image
+						style={styles.artefactAvatar}
+						source={require('../../../assets/ramon.png')}
+					/>
+					<View style={styles.containerDetails}>
+						<Text style={styles.artefactName}>{thread.artefact_name}</Text>
+						<Text style={styles.lastMessage}>
+							{thread.last_message_subtitle}
+						</Text>
+					</View>
+				</View>
+			</TouchableOpacity>
 		);
 	}
 }

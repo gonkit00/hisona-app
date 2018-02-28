@@ -6,9 +6,9 @@ export default StyleSheet.create({
 		justifyContent: 'space-between',
 		paddingHorizontal: 4,
 		paddingVertical: 8,
-    backgroundColor: '#fff',
-    borderTopColor: '#D9E0E6',
-    borderTopWidth: 1,
+		backgroundColor: '#fff',
+		borderTopColor: '#D9E0E6',
+		borderTopWidth: 1
 	},
 
 	textBox: {
@@ -16,17 +16,17 @@ export default StyleSheet.create({
 		borderWidth: 1,
 		flex: 1,
 		fontSize: 16,
-    paddingHorizontal: 10,
-    borderWidth: 0
+		paddingHorizontal: 10,
+		borderWidth: 0
 	},
 
 	sendButton: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		paddingLeft: 15,
-		marginLeft: 5,
-		paddingRight: 15,
-		borderRadius: 5,
+		paddingRight: 8,
+		paddingLeft: 8,
+		marginRight: 8,
+		borderRadius: 32,
 		backgroundColor: '#2575FC'
 	}
 });
