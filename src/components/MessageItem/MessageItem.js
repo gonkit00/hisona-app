@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import styles from './styles';
 
-class MessageBubble extends Component {
+class MessageItem extends Component {
 	render() {
 		// These spacers make the message bubble stay to the left or the right, depending on who is speaking, even if the message is multiple lines.
 		const leftSpacer =
@@ -32,5 +32,5 @@ class MessageBubble extends Component {
 	}
 }
 
-export default MessageBubble;
+export default MessageItem;
 
