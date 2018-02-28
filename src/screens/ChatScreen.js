@@ -17,10 +17,10 @@ import * as chatSelectors from '~/store/Chats/reducer';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 
-import { ScreenHeader } from '~/components/ScreenHeader';
-import { MessageBubble } from '~/components/MessageBubble';
+import { MessageItem } from '~/components/MessageItem';
+import { TypingIndicator } from '~/components/MessageItem';
 import { ChatInput } from '~/components/ChatInput';
-import { Loader } from '~/components/Loader';
+import { ProgressBar } from '~/components/ProgressBar';
 
 class ChatScreen extends Component {
 	constructor(props) {
@@ -32,7 +32,8 @@ class ChatScreen extends Component {
 
 	// get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
 	componentWillMount() {
-		this.getMessages();
+    // todo
+		this.getMessages(this.props.threadId);
 
 		this.keyboardDidShowListener = Keyboard.addListener(
 			'keyboardDidShow',
@@ -94,7 +95,7 @@ class ChatScreen extends Component {
 			this._getReply(text);
 		}, 1000);
 
-		Keyboard.dismiss();
+		// Keyboard.dismiss();
 		this.setState({ inputBarText: '' });
 	}
 
@@ -111,12 +112,20 @@ class ChatScreen extends Component {
 		});
 	}
 
-	_renderLoading = () => <Loader />;
+	_renderProgressBar = () => <ProgressBar />;
+
+	_renderMessage = (message, index) => (
+		<MessageItem
+			key={index}
+			direction={message.direction}
+			text={message.text}
+		/>
+	);
 
 	render() {
 		return (
-			<View style={styles.outer}>
-				<ScreenHeader />
+			<View style={styles.container}>
+				<TypingIndicator />
 				<ScrollView
 					ref={ref => {
 						this.scrollView = ref;
@@ -124,14 +133,10 @@ class ChatScreen extends Component {
 					style={styles.messages}
 				>
 					{this.props.isLoading
-						? this._renderLoading()
-						: this.props.currentThread.map((message, index) => (
-								<MessageBubble
-									key={index}
-									direction={message.direction}
-									text={message.text}
-								/>
-							))}
+						? this._renderProgressBar()
+						: this.props.currentThread.map((message, index) =>
+								this._renderMessage(message, index)
+							)}
 				</ScrollView>
 				<ChatInput
 					onSendPressed={() => this._sendMessage()}
@@ -146,7 +151,7 @@ class ChatScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-	outer: {
+	container: {
 		flex: 1,
 		flexDirection: 'column',
 		justifyContent: 'space-between',
@@ -168,12 +173,10 @@ const mapStateToProps = state => {
 	};
 };
 
-function mapDispatchToProps(dispatch) {
-	return {
+const mapDispatchToProps = dispatch => ({
 		getThread: () => dispatch(chatActions.getThread()),
 		addMessage: newMessage => dispatch(chatActions.addMessage(newMessage)),
 		addReply: text => dispatch(chatActions.addReply(text))
-	};
-}
+	});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
