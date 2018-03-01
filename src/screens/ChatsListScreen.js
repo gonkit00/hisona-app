@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import get from 'lodash/get';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import * as chatActions from '~/store/Chats/actions';
@@ -15,19 +16,28 @@ import * as chatSelectors from '~/store/Chats/reducer';
 
 import { ScreenHeader } from '~/components/ScreenHeader';
 import { ProgressBar } from '~/components/ProgressBar';
+import { PulseIndicator } from 'react-native-indicators';
 import { ChatItem } from '~/components/ChatItem';
 
 class ChatsListScreen extends Component {
-	componentWillMount() {
-		this.props.getChats();
+	async componentDidMount() {
+		await this.props.getArtefacts();
+		await this.props.getChats();
 	}
 
-	_viewThread = threadId => {
-		Actions.chatScreen({ threadId });
+	_viewThread = (threadId, artefactName) => {
+		this.props.openThread(threadId, artefactName);
 	};
 
 	_renderChatThread(rowData) {
-		return <ChatItem thread={rowData} onViewThread={this._viewThread} />;
+		const artefact = get(this.props.artefactsById, rowData.artefact_id);
+		return (
+			<ChatItem
+				artefact={artefact}
+				thread={rowData}
+				onViewThread={this._viewThread}
+			/>
+		);
 	}
 
 	_renderProgressBar() {
@@ -35,13 +45,14 @@ class ChatsListScreen extends Component {
 	}
 
 	render() {
-		return this.props.isLoading ? (
+		const { isLoading, chats } = this.props;
+		return isLoading ? (
 			this._renderProgressBar()
 		) : (
 			<View style={styles.container}>
 				<ListView
 					enableEmptySections
-					dataSource={this.props.chats}
+					dataSource={chats}
 					renderRow={rowData => this._renderChatThread(rowData)}
 					renderSeparator={(sectionId, rowId) => (
 						<View key={rowId} style={styles.seperator} />
@@ -53,7 +64,7 @@ class ChatsListScreen extends Component {
 					}}
 				>
 					<View style={styles.buttonRecognise}>
-						<Ionicons name="ios-add-outline" size={56} color="white" />
+						<Text>+</Text>
 					</View>
 				</TouchableHighlight>
 			</View>
@@ -89,18 +100,22 @@ const ds = new ListView.DataSource({
 
 const mapStateToProps = state => {
 	const isLoading = chatSelectors.isLoading(state);
+	const artefactsById = chatSelectors.getArtefactsById(state);
 	const allChats = chatSelectors.getChats(state);
 
 	return {
 		isLoading,
+		artefactsById,
 		chats: ds.cloneWithRows(allChats)
 	};
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
 	return {
+		getArtefacts: () => dispatch(chatActions.getArtefacts()),
 		getChats: () => dispatch(chatActions.getChats()),
-		openThread: () => dispatch(chatActions.getThread())
+		openThread: (threadId, artefactName) =>
+			dispatch(chatActions.openThread(threadId, artefactName))
 	};
 }
 

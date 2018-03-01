@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import * as chatActions from '~/store/Chats/actions';
 import * as chatSelectors from '~/store/Chats/reducer';
 
+import { Actions } from 'react-native-router-flux';
+
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import AutogrowInput from 'react-native-autogrow-input';
 
@@ -32,8 +34,8 @@ class ChatScreen extends Component {
 
 	// get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
 	componentWillMount() {
-    // todo
-		this.getMessages(this.props.threadId);
+		// todo: render in ChatsList
+		// Actions.refresh({ title: this.props.artefact.artefact_name });
 
 		this.keyboardDidShowListener = Keyboard.addListener(
 			'keyboardDidShow',
@@ -43,14 +45,6 @@ class ChatScreen extends Component {
 			'keyboardDidHide',
 			this.keyboardDidHide.bind(this)
 		);
-	}
-
-	getMessages() {
-		this.props.getThread();
-	}
-
-	_getReply(text) {
-		this.props.addReply(text);
 	}
 
 	componentWillUnmount() {
@@ -76,27 +70,10 @@ class ChatScreen extends Component {
 		});
 	}
 
-	// this is a bit sloppy: this is to make sure it scrolls to the bottom when a message is added, but
-	// the component could update for other reasons, for which we wouldn't want it to scroll to the bottom.
 	componentDidUpdate() {
 		setTimeout(() => {
 			this.scrollView.scrollToEnd();
 		});
-	}
-
-	_sendMessage() {
-		const text = this.state.inputBarText.toLowerCase().trim();
-		const newMessage = { direction: 'right', text };
-
-		this.props.addMessage(newMessage);
-
-		// TODO: Add typing indicator
-		setTimeout(() => {
-			this._getReply(text);
-		}, 1000);
-
-		// Keyboard.dismiss();
-		this.setState({ inputBarText: '' });
 	}
 
 	_onChangeInputBarText(text) {
@@ -112,31 +89,46 @@ class ChatScreen extends Component {
 		});
 	}
 
-	_renderProgressBar = () => <ProgressBar />;
+	_sendMessage() {
+		const text = this.state.inputBarText.trim();
+		const newMessage = { content_type: 'text', direction: 'right', text };
 
-	_renderMessage = (message, index) => (
-		<MessageItem
-			key={index}
-			direction={message.direction}
-			text={message.text}
-		/>
+		this.props.addMessage(newMessage);
+		this._getReply(text);
+		this.setState({ inputBarText: '' });
+	}
+
+	_getReply(text) {
+		this.props.addReply(text);
+	}
+
+	_renderMessage = (m, i) => (
+		<MessageItem key={i} direction={m.direction} text={m.text} />
 	);
 
+	_renderTypingIndicator = i => <TypingIndicator key={i} />;
+
+	_renderProgressBar = () => <ProgressBar />;
+
 	render() {
+    const { isLoading, currentThread } = this.props;
 		return (
 			<View style={styles.container}>
-				<TypingIndicator />
 				<ScrollView
 					ref={ref => {
 						this.scrollView = ref;
 					}}
 					style={styles.messages}
 				>
-					{this.props.isLoading
+					{isLoading
 						? this._renderProgressBar()
-						: this.props.currentThread.map((message, index) =>
-								this._renderMessage(message, index)
-							)}
+						: currentThread[0].thread.map((m, i) => {
+              if (m.content_type === 'typing_indicator') {
+                return this._renderTypingIndicator(i);
+              } else if (m.content_type === 'text') {
+                return this._renderMessage(m, i);
+              }
+            })}
 				</ScrollView>
 				<ChatInput
 					onSendPressed={() => this._sendMessage()}
@@ -164,19 +156,20 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+	const currentArtefact = chatSelectors.getCurrentArtefact(state);
 	const currentThread = chatSelectors.getCurrentThread(state);
 	const isLoading = chatSelectors.isLoading(state);
 
 	return {
 		isLoading,
+		currentArtefact,
 		currentThread
 	};
 };
 
 const mapDispatchToProps = dispatch => ({
-		getThread: () => dispatch(chatActions.getThread()),
-		addMessage: newMessage => dispatch(chatActions.addMessage(newMessage)),
-		addReply: text => dispatch(chatActions.addReply(text))
-	});
+	addMessage: newMessage => dispatch(chatActions.addMessage(newMessage)),
+	addReply: text => dispatch(chatActions.addReply(text))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);
