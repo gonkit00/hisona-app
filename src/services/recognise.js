@@ -4,7 +4,9 @@
  *
  */
 
-const BASE_ENDPOINT = 'http://6f4e0a98.ngrok.io/api/v1';
+import config from '~/config/api';
+
+const BASE_ENDPOINT = config.base_endpoint;
 
 const RecogniseService = {
 	async classifyImage(uri) {
@@ -15,7 +17,7 @@ const RecogniseService = {
 
 			data.append('photo', {
 				uri,
-				name: 'selfie.jpg',
+				name: 'artefact',
 				type: 'image/jpg'
 			});
 
@@ -36,8 +38,34 @@ const RecogniseService = {
 			}
 
 			// Response was ok
+			const classData = await response.json();
+
+			return classData;
+		} catch (error) {
+			console.error(error);
+		}
+	},
+
+	async mapClassToArtefact(classData) {
+    const url = `${BASE_ENDPOINT}/classification/image/map`;
+
+		try {
+
+			const opts = {
+				method: 'POST',
+				body: JSON.stringify(classData)
+			};
+
+			const response = await fetch(url, opts);
+
+			if (!response.ok) {
+				throw new Error(`Failed to get a response from the '${url}' endpoint`);
+			}
+
+			// Response was ok
 			const artefact = await response.json();
-			return artefact;
+      return artefact;
+
 		} catch (error) {
 			console.error(error);
 		}

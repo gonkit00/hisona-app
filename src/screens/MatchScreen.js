@@ -10,14 +10,12 @@ class MatchScreen extends Component {
 		super(props);
 	}
 
-	async componentWillMount() {
-		// const resizedImage = await this.resizeImageFromUri(uri);
-		// const artefact = await RecogniseService.classifyImage(resizedImage.uri);
-		// alert(JSON.stringify(artefact));
+	componentWillMount() {
+
 	}
 
 	onButtonPress() {
-		Actions.reset('chatScreen');
+		Actions.reset('root');
 	}
 
 	render() {
@@ -29,15 +27,21 @@ class MatchScreen extends Component {
 					colors={['#2575FC', '#8C5DAA', '#E64D4D']}
 				>
 					<View style={styles.container}>
-						<Image
-							style={styles.hisonaLogo}
-							source={require('../../assets/hisona_loading_logo.png')}
-						/>
 						<Text style={styles.loadingText}>Hello!</Text>
+						<Image
+							style={styles.artefactAvatar}
+							source={{ uri: this.props.artefact.avatar_path }}
+						/>
+						<Text style={styles.loadingText}>
+							{this.props.artefact.artefact_name}
+						</Text>
+						<Text style={styles.loadingText}>
+							{this.props.artefact.locarion}
+						</Text>
 						<Button
 							onPress={() => this.onButtonPress()}
 							title="Start Conversation"
-							color="#fff"
+							style={styles.button}
 							accessibilityLabel="Start a conversation with a Hisona artefact"
 						/>
 					</View>
@@ -53,13 +57,21 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	hisonaLogo: {
-		width: 124,
-		height: 124
+	artefactAvatar: {
+		width: 164,
+		height: 164,
+		borderRadius: 82,
+		margin: 16
 	},
 	loadingText: {
 		color: '#fff',
-		fontSize: 16
+		fontSize: 20
+	},
+	button: {
+		color: '#212121',
+		backgroundColor: '#fff',
+		padding: 32,
+		flex: 1
 	}
 });
 

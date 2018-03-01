@@ -3,7 +3,10 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { LinearGradient, ImageManipulator } from 'expo';
 import { PulseIndicator } from 'react-native-indicators';
 
-import RecogniseService from '~/services/recognise';
+import { connect } from 'react-redux';
+import * as recogniseActions from '~/store/Recognise/actions';
+import * as recogniseSelectors from '~/store/Recognise/reducer';
+
 import { Actions } from 'react-native-router-flux';
 
 class RecogniseScreen extends Component {
@@ -11,23 +14,18 @@ class RecogniseScreen extends Component {
 		super(props);
 	}
 
-	async componentWillMount() {
-		const { uri } = this.props.photoData;
+	async componentDidMount() {
+    const { uri } = this.props.photoData;
 
 		const resizedImage = await this.resizeImageFromUri(uri);
-		const artefact = await RecogniseService.classifyImage(resizedImage.uri);
-
-    alert(JSON.stringify(artefact));
-    // setTimeout(() => {
-    //   Actions.replace('matchScreen')
-    // }, 5000)
+		this.props.classifyImage(resizedImage.uri)
 	}
 
 	async resizeImageFromUri(uri) {
 		const manipResult = await ImageManipulator.manipulate(
 			uri,
 			[{ resize: { width: 230, height: 420 } }],
-			{ compress: 0.2, format: 'jpeg' }
+			{ format: 'jpeg' }
 		);
 		return manipResult;
 	}
@@ -41,7 +39,7 @@ class RecogniseScreen extends Component {
 					colors={['#2575FC', '#8C5DAA', '#E64D4D']}
 				>
 					<View style={styles.container}>
-						<PulseIndicator animationDuration={2000} color="white" size={164} />
+						<PulseIndicator animationDuration={2000} color="white" size={172} />
 						<Image
 							style={styles.hisonaLogo}
 							source={require('../../assets/hisona_loading_logo.png')}
@@ -72,4 +70,8 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default RecogniseScreen;
+const mapDispatchToProps = dispatch => ({
+	classifyImage: imageUri => dispatch(recogniseActions.classifyImage(imageUri))
+});
+
+export default connect(null, mapDispatchToProps)(RecogniseScreen);
