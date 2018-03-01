@@ -3,24 +3,17 @@ import { Text, View, Image, TouchableOpacity } from 'react-native';
 import styles from './styles';
 
 class ChatItem extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
-		const { thread, onViewThread } = this.props;
+		const { artefact, thread, onViewThread } = this.props;
 		return (
 			<TouchableOpacity
 				activeOpacity={0.9}
-				onPress={onViewThread.bind(this, thread.conversation_id)}
+				onPress={() => onViewThread(thread.conversation_id, artefact.artefact_name)}
 			>
 				<View style={styles.container}>
-					<Image
-						style={styles.artefactAvatar}
-						source={require('../../../assets/ramon.png')}
-					/>
+					<Image style={styles.artefactAvatar} source={{ uri: artefact.avatar_path }} />
 					<View style={styles.containerDetails}>
-						<Text style={styles.artefactName}>{thread.artefact_name}</Text>
+						<Text style={styles.artefactName}>{artefact.artefact_name}</Text>
 						<Text style={styles.lastMessage}>
 							{thread.last_message_subtitle}
 						</Text>

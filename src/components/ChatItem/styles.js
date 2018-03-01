@@ -10,6 +10,7 @@ export default StyleSheet.create({
 	artefactAvatar: {
 		width: 48,
     height: 48,
+    borderRadius: 24,
     marginRight: 16
 	},
 	artefactName: {
