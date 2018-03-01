@@ -4,9 +4,29 @@
  *
  */
 
-const BASE_ENDPOINT = 'http://6f4e0a98.ngrok.io/api/v1';
+import config from '~/config/api';
+
+const BASE_ENDPOINT = config.base_endpoint;
 
 const ChatsService = {
+	async fetchArtefacts() {
+		const url = `${BASE_ENDPOINT}/user/artefacts`;
+
+		try {
+			const response = await fetch(url);
+
+			if (!response.ok) {
+				throw new Error(`Failed to get a response from the '${url}' endpoint`);
+			}
+
+			// Response was ok
+      const artefacts = await response.json();
+			return artefacts;
+		} catch (error) {
+			console.error(error);
+		}
+	},
+
 	async fetchChats() {
 		const url = `${BASE_ENDPOINT}/user/conversations`;
 
@@ -18,27 +38,8 @@ const ChatsService = {
 			}
 
 			// Response was ok
-			const conversations = await response.json();
-			return conversations;
-		} catch (error) {
-			console.error(error);
-		}
-	},
-
-	// todo accept thread ID
-	async fetchThread() {
-		const url = `${BASE_ENDPOINT}/user/conversations/thread`;
-
-		try {
-			const response = await fetch(url);
-
-			if (!response.ok) {
-				throw new Error(`Failed to get a response from the '${url}' endpoint`);
-			}
-
-			// Response was ok
-			const thread = await response.json();
-			return thread;
+			const chats = await response.json();
+			return chats;
 		} catch (error) {
 			console.error(error);
 		}
@@ -59,8 +60,6 @@ const ChatsService = {
 
 			// Response was ok
 			const reply = await response.json();
-
-			console.log(reply);
 
 			return reply;
 		} catch (error) {
