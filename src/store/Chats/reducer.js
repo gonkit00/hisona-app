@@ -3,53 +3,50 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
+	artefactsById: {},
 	allChats: [],
-	currentArtefactId: undefined,
-	currentThread: [],
+	currentArtefact: undefined,
+	currentThread: undefined,
 	isLoading: false,
 	error: undefined
 });
 
 export default function reduce(state = initialState, action = {}) {
 	switch (action.type) {
+		case types.CHATS_ARTEFACTS_FETCHED:
 		case types.CHATS_FETCHED:
 			return state.merge({
 				isLoading: true
+			});
+		case types.CHATS_ARTEFACTS_FETCHED_SUCCESS:
+			return state.merge({
+				artefactsById: action.artefactsById,
+				isLoading: false
 			});
 		case types.CHATS_FETCHED_SUCCESS:
 			return state.merge({
 				allChats: action.chats,
 				isLoading: false
 			});
-		case types.CHATS_FETCHED_FAILURE:
+		case types.CHATS_THREAD_OPENED:
+			const current = state.allChats.filter(
+				chat => chat.conversation_id === action.threadId
+			);
 			return state.merge({
-				error: action.error.message,
-				isLoading: false
-			});
-		case types.CHATS_THREAD_FETCHED:
-			return state.merge({
-				isLoading: true
-			});
-		case types.CHATS_THREAD_FETCHED_SUCCESS:
-			return state.merge({
-				currentThread: action.thread,
-				isLoading: false
-			});
-		case types.CHATS_THREAD_FETCHED_FAILURE:
-			return state.merge({
-				error: action.error.message,
-				isLoading: false
+				currentArtefact: current,
+				currentThread: current
 			});
 		case types.CHATS_THREAD_NEW_MESSAGE:
 			return state.merge({
-				currentThread: [...state.currentThread, action.message],
-				isLoading: false
+				currentThread: [...state.currentThread, action.message]
 			});
 		case types.CHATS_THREAD_REPLY_FETCHED_SUCCESS:
 			return state.merge({
-				currentThread: [...state.currentThread, action.replyMessage],
+				currentThread: [...state.currentThread, ...action.reply],
 				isLoading: false
 			});
+		case types.CHATS_ARTEFACTS_FETCHED_FAILURE:
+		case types.CHATS_FETCHED_FAILURE:
 		case types.CHATS_THREAD_FETCHED_FAILURE:
 			return state.merge({
 				error: action.error.message,
@@ -70,9 +67,19 @@ export const isLoading = state => {
 	return loadingStatus;
 };
 
+export const getArtefactsById = state => {
+	const artefactsById = state.chats.artefactsById;
+	return artefactsById;
+};
+
 export const getChats = state => {
 	const chats = state.chats.allChats;
 	return chats;
+};
+
+export const getCurrentArtefact = state => {
+	const artefact = state.chats.currentArtefact;
+	return artefact;
 };
 
 export const getCurrentThread = state => {
