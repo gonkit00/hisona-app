@@ -3,6 +3,7 @@ import * as types from './actionTypes';
 import Immutable from 'seamless-immutable';
 
 const initialState = Immutable({
+	lastClassifiedArtefact: undefined,
 	isLoading: false,
 	error: undefined
 });
@@ -15,6 +16,7 @@ export default function reduce(state = initialState, action = {}) {
 			});
 		case types.RECOGNISE_CLASSIFY_IMAGE_SUCCESS:
 			return state.merge({
+				lastClassifiedArtefact: action.artefactId,
 				isLoading: false
 			});
 		case types.RECOGNISE_CLASSIFY_IMAGE_FAILURE:
@@ -30,6 +32,6 @@ export default function reduce(state = initialState, action = {}) {
 /** Selectors */
 
 export const isLoading = state => {
-	const loadingStatus = state.chats.isLoading;
+	const loadingStatus = state.recognise.isLoading;
 	return loadingStatus;
 };

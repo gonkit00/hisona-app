@@ -8,21 +8,22 @@ export const classifyImage = imageUri => async (dispatch, getState) => {
 		dispatch({ type: types.RECOGNISE_CLASSIFY_IMAGE_REQUESTED });
 
 		const classData = await RecogniseService.classifyImage(imageUri);
-		const artefact = await RecogniseService.mapClassToArtefact(classData);
 
-		if (!artefact) {
-			throw new Error('Artefacts fetch request failed');
+		if (!classData.images[0].classifiers.length) {
+			throw new Error('There is no artefact that matches the class label');
 		}
+
+		const artefact = await RecogniseService.mapClassToArtefact(classData);
 
 		// Normalise the artefact
 		const artefactById = keyByIds(artefact);
 
 		dispatch({
 			type: types.RECOGNISE_CLASSIFY_IMAGE_SUCCESS,
-			artefactById
+			artefactId: artefactById
 		});
-    Actions.push('matchScreen', { artefact: artefact[0] });
 
+		Actions.push('matchScreen', { artefact: artefact[0] });
 	} catch (error) {
 		dispatch({ type: types.RECOGNISE_CLASSIFY_IMAGE_FAILURE, error });
 		Actions.reset('root');
