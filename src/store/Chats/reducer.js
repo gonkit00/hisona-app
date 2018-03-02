@@ -34,7 +34,7 @@ export default function reduce(state = initialState, action = {}) {
 			);
 			return state.merge({
 				currentArtefact: current,
-				currentThread: current
+				currentThread: current[0].thread
 			});
 		case types.CHATS_THREAD_NEW_MESSAGE:
 			return state.merge({
@@ -52,9 +52,6 @@ export default function reduce(state = initialState, action = {}) {
 				error: action.error.message,
 				isLoading: false
 			});
-		case types.CHATS_NEW_CONVERSATION:
-		case types.CHATS_NEW_CONVERSATION_SUCCESS:
-			return state;
 		default:
 			return state;
 	}

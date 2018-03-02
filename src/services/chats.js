@@ -13,7 +13,9 @@ const ChatsService = {
 		const url = `${BASE_ENDPOINT}/user/artefacts`;
 
 		try {
-			const response = await fetch(url);
+      const response = await fetch(url);
+
+      console.log(response);
 
 			if (!response.ok) {
 				throw new Error(`Failed to get a response from the '${url}' endpoint`);
@@ -21,7 +23,8 @@ const ChatsService = {
 
 			// Response was ok
       const artefacts = await response.json();
-			return artefacts;
+      return artefacts;
+
 		} catch (error) {
 			console.error(error);
 		}

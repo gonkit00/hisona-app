@@ -99,7 +99,8 @@ class ChatScreen extends Component {
 	}
 
 	_getReply(text) {
-		this.props.addReply(text);
+		const artefactId = this.props.currentArtefact[0].artefact_id;
+		this.props.addReply(artefactId, text);
 	}
 
 	_renderMessage = (m, i) => (
@@ -111,7 +112,7 @@ class ChatScreen extends Component {
 	_renderProgressBar = () => <ProgressBar />;
 
 	render() {
-    const { isLoading, currentThread } = this.props;
+		const { isLoading, currentThread } = this.props;
 		return (
 			<View style={styles.container}>
 				<ScrollView
@@ -122,13 +123,13 @@ class ChatScreen extends Component {
 				>
 					{isLoading
 						? this._renderProgressBar()
-						: currentThread[0].thread.map((m, i) => {
-              if (m.content_type === 'typing_indicator') {
-                return this._renderTypingIndicator(i);
-              } else if (m.content_type === 'text') {
-                return this._renderMessage(m, i);
-              }
-            })}
+						: currentThread.map((m, i) => {
+								if (m.content_type === 'typing_indicator') {
+									return this._renderTypingIndicator(i);
+								} else if (m.content_type === 'text') {
+									return this._renderMessage(m, i);
+								}
+							})}
 				</ScrollView>
 				<ChatInput
 					onSendPressed={() => this._sendMessage()}
@@ -169,7 +170,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
 	addMessage: newMessage => dispatch(chatActions.addMessage(newMessage)),
-	addReply: text => dispatch(chatActions.addReply(text))
+	addReply: (artefactId, text) =>
+		dispatch(chatActions.addReply(artefactId, text))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatScreen);

@@ -24,7 +24,7 @@ class RecogniseScreen extends Component {
 	async resizeImageFromUri(uri) {
 		const manipResult = await ImageManipulator.manipulate(
 			uri,
-			[{ resize: { width: 230, height: 420 } }],
+			[{ resize: { width: 430, height: 820 } }],
 			{ format: 'jpeg' }
 		);
 		return manipResult;

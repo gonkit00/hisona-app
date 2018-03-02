@@ -20,7 +20,7 @@ import { PulseIndicator } from 'react-native-indicators';
 import { ChatItem } from '~/components/ChatItem';
 
 class ChatsListScreen extends Component {
-	async componentDidMount() {
+	async componentWillMount() {
 		await this.props.getArtefacts();
 		await this.props.getChats();
 	}

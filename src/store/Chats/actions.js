@@ -12,7 +12,7 @@ export const getArtefacts = () => async (dispatch, getState) => {
 			throw new Error('Artefacts fetch request failed');
 		}
 
-		// Normalise the chats
+		// Normalise the artefacts
 		const artefactsById = keyByIds(artefacts);
 
 		dispatch({
@@ -58,14 +58,13 @@ export const addMessage = message => ({
 	message
 });
 
-export const addReply = text => async (dispatch, getState) => {
+export const addReply = (artefact_id, text) => async (dispatch, getState) => {
 	try {
 		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED });
 
-		// TODO: Pass current artefact ID
 		const opts = {
-			artefact_id: '2_es_pub_christophercolumbus',
-			msgStr: text
+			artefact_id,
+			text
 		};
 
 		const replyData = await ChatsService.fetchReply(opts);
