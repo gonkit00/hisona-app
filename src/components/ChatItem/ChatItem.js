@@ -8,12 +8,29 @@ class ChatItem extends Component {
 		return (
 			<TouchableOpacity
 				activeOpacity={0.9}
-				onPress={() => onViewThread(thread.conversation_id, artefact.artefact_name)}
+				onPress={() =>
+					onViewThread(
+						thread.conversation_id,
+						artefact.artefact_id,
+            artefact.artefact_name
+					)
+				}
 			>
 				<View style={styles.container}>
-					<Image style={styles.artefactAvatar} source={{ uri: artefact.avatar_path }} />
+					<Image
+						style={styles.artefactAvatar}
+						source={{ uri: artefact.avatar_path }}
+					/>
 					<View style={styles.containerDetails}>
-						<Text style={styles.artefactName}>{artefact.artefact_name}</Text>
+						<Text
+							style={
+								thread.read
+									? styles.artefactNameRead
+									: styles.artefactNameUnread
+							}
+						>
+							{artefact.artefact_name}
+						</Text>
 						<Text style={styles.lastMessage}>
 							{thread.last_message_subtitle}
 						</Text>
