@@ -21,21 +21,6 @@ export default class Header extends Component {
 		);
 	}
 
-	_renderRight() {
-		return (
-			<TouchableOpacity
-				onPress={() => Actions.cameraScreen()}
-				style={[styles.navBarItem, styles.buttonAdd]}
-			>
-				<Image
-					style={{ width: 20, height: 20 }}
-					resizeMode="contain"
-					source={require('../../../assets/icons/ic_add.png')}
-				/>
-			</TouchableOpacity>
-		);
-	}
-
 	render() {
 		return (
 			<View style={styles.container}>
@@ -46,7 +31,6 @@ export default class Header extends Component {
 				>
 					<View style={styles.navItemsContainer}>
 						{this._renderLeft()}
-						{this._renderRight()}
 					</View>
 				</LinearGradient>
 			</View>
