@@ -6,7 +6,6 @@ import {
 	ListView,
 	TouchableHighlight
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 import get from 'lodash/get';
 import { Actions } from 'react-native-router-flux';
@@ -14,19 +13,18 @@ import { connect } from 'react-redux';
 import * as chatActions from '~/store/Chats/actions';
 import * as chatSelectors from '~/store/Chats/reducer';
 
-import { ScreenHeader } from '~/components/ScreenHeader';
 import { ProgressBar } from '~/components/ProgressBar';
 import { PulseIndicator } from 'react-native-indicators';
 import { ChatItem } from '~/components/ChatItem';
 
 class ChatsListScreen extends Component {
-	async componentWillMount() {
+	async componentDidMount() {
 		await this.props.getArtefacts();
 		await this.props.getChats();
 	}
 
-	_viewThread = (threadId, artefactName) => {
-		this.props.openThread(threadId, artefactName);
+	_viewThread = (threadId, artefactId, artefactName) => {
+		this.props.openThread(threadId, artefactId, artefactName);
 	};
 
 	_renderChatThread(rowData) {
@@ -58,15 +56,6 @@ class ChatsListScreen extends Component {
 						<View key={rowId} style={styles.seperator} />
 					)}
 				/>
-				<TouchableHighlight
-					onPress={() => {
-						Actions.cameraScreen();
-					}}
-				>
-					<View style={styles.buttonRecognise}>
-						<Text>+</Text>
-					</View>
-				</TouchableHighlight>
 			</View>
 		);
 	}
@@ -82,15 +71,6 @@ const styles = StyleSheet.create({
 	seperator: {
 		backgroundColor: '#e7e7e7',
 		height: 1
-	},
-	buttonRecognise: {
-		width: 64,
-		height: 64,
-		borderRadius: 32,
-		backgroundColor: '#2575FC',
-		position: 'absolute',
-		bottom: 16,
-		right: 16
 	}
 });
 
@@ -110,13 +90,11 @@ const mapStateToProps = state => {
 	};
 };
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		getArtefacts: () => dispatch(chatActions.getArtefacts()),
-		getChats: () => dispatch(chatActions.getChats()),
-		openThread: (threadId, artefactName) =>
-			dispatch(chatActions.openThread(threadId, artefactName))
-	};
-}
+const mapDispatchToProps = dispatch => ({
+	getArtefacts: () => dispatch(chatActions.getArtefacts()),
+	getChats: () => dispatch(chatActions.getChats()),
+	openThread: (threadId, artefactId, artefactName) =>
+		dispatch(chatActions.openThread(threadId, artefactId, artefactName))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatsListScreen);
