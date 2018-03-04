@@ -18,9 +18,7 @@ The purpose of Hisona is to make learning about history easier and more fun. By 
 
 ## Experience
 
-<div align="center">
- <img height="232px" src="hhttps://media.giphy.com/media/5YbVc5mRXOR3fOpBNs/giphy.gif"></img>
-</div>
+https://media.giphy.com/media/5YbVc5mRXOR3fOpBNs/giphy.gif
 
 ## Contact Me
 
