@@ -34,9 +34,6 @@ class ChatScreen extends Component {
 
 	// get the end of the ScrollView to "follow" the top of the InputBar as the keyboard rises and falls
 	componentWillMount() {
-		// todo: render in ChatsList
-		// Actions.refresh({ title: this.props.artefact.artefact_name });
-
 		this.keyboardDidShowListener = Keyboard.addListener(
 			'keyboardDidShow',
 			this.keyboardDidShow.bind(this)
@@ -103,6 +100,15 @@ class ChatScreen extends Component {
 		this.props.addReply(artefactId, text);
 	}
 
+  _renderMessages = () => {
+    return this.props.currentThread.map((m, i) => {
+        if (m.content_type === 'typing_indicator') {
+          return this._renderTypingIndicator(i);
+        } else if (m.content_type === 'text') {
+          return this._renderMessage(m, i);
+        }
+    });
+  }
 	_renderMessage = (m, i) => (
 		<MessageItem key={i} direction={m.direction} text={m.text} />
 	);
@@ -123,13 +129,7 @@ class ChatScreen extends Component {
 				>
 					{isLoading
 						? this._renderProgressBar()
-						: currentThread.map((m, i) => {
-								if (m.content_type === 'typing_indicator') {
-									return this._renderTypingIndicator(i);
-								} else if (m.content_type === 'text') {
-									return this._renderMessage(m, i);
-								}
-							})}
+						: this._renderMessages()}
 				</ScrollView>
 				<ChatInput
 					onSendPressed={() => this._sendMessage()}
@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		backgroundColor: '#F7F8FA'
 	},
-
 	messages: {
 		flex: 1
 	}
