@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, TextInput, TouchableHighlight } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import AutogrowInput from 'react-native-autogrow-input';
 import styles from './styles';
@@ -21,7 +21,7 @@ class ChatInput extends Component {
 						this.autogrowInput = ref;
 					}}
 					multiline
-					defaultHeight={32}
+					defaultHeight={38}
 					onChangeText={text => this.props.onChangeText(text)}
 					onContentSizeChange={this.props.onSizeChange}
 					value={this.props.text}
@@ -31,7 +31,7 @@ class ChatInput extends Component {
 					style={styles.sendButton}
 					onPress={() => this.props.onSendPressed()}
 				>
-					<Ionicons name="md-arrow-up" size={24} color="white" />
+					<MaterialIcons name="arrow-upward" size={24} color="white" />
 				</TouchableHighlight>
 			</View>
 		);

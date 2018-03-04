@@ -8,15 +8,15 @@ export default StyleSheet.create({
 		paddingVertical: 8,
 		backgroundColor: '#fff',
 		borderTopColor: '#D9E0E6',
-		borderTopWidth: 1
+    borderTopWidth: 1,
 	},
 
 	textBox: {
-		borderRadius: 5,
-		borderWidth: 1,
 		flex: 1,
-		fontSize: 16,
-		paddingHorizontal: 10,
+    fontSize: 18,
+    fontFamily: 'barlow-regular',
+		paddingVertical: 12,
+		paddingHorizontal: 12,
 		borderWidth: 0
 	},
 
