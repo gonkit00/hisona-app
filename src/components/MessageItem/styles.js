@@ -9,7 +9,7 @@ export default StyleSheet.create({
 		paddingHorizontal: 12,
 		paddingVertical: 10,
 		flexDirection: 'row',
-		flex: 1
+		// flex: 1
 	},
 
 	messageBubbleLeft: {
@@ -17,7 +17,8 @@ export default StyleSheet.create({
 	},
 
 	messageBubbleTextLeft: {
-		fontSize: 15,
+		fontSize: 18,
+		fontFamily: 'barlow-regular',
 		color: '#212121'
 	},
 
@@ -26,7 +27,8 @@ export default StyleSheet.create({
 	},
 
 	messageBubbleTextRight: {
-		fontSize: 15,
+		fontSize: 18,
+		fontFamily: 'barlow-regular',
 		color: 'white'
 	}
 });

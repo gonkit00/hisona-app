@@ -2,30 +2,36 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
 	container: {
-    backgroundColor: 'white',
+		backgroundColor: 'white',
 		padding: 12,
 		flex: 1,
-		flexDirection: 'row'
+		flexDirection: 'row',
+		alignItems: 'center'
 	},
 	containerDetails: {},
 	artefactAvatar: {
 		width: 48,
-    height: 48,
-    borderRadius: 24,
-    marginRight: 16
+		height: 48,
+		borderRadius: 24,
+		marginRight: 12
 	},
-	artefactName: {
-		fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 6
+	artefactNameRead: {
+		fontSize: 19,
+		fontFamily: 'barlow-regular',
+		marginBottom: 4
+	},
+	artefactNameUnread: {
+		fontSize: 19,
+		fontFamily: 'barlow-medium',
+		marginBottom: 4
 	},
 	lastMessageDate: {
-		fontSize: 14,
-		color: '#858385',
-		alignSelf: 'flex-end'
+		fontSize: 16,
+		color: '#858385'
 	},
 	lastMessage: {
-		fontSize: 14,
-    color: '#858385'
+		fontSize: 16,
+		fontFamily: 'barlow-regular',
+		color: '#858385'
 	}
 });

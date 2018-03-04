@@ -8,21 +8,21 @@ const TypingIndicator = () => (
 			animationDuration={1000}
 			color={'#898989'}
 			count={3}
-			size={6}
+			size={5}
 		/>
 	</View>
 );
 
 const styles = StyleSheet.create({
 	messageBubble: {
-    width: 60,
+		width: 44,
 		backgroundColor: '#E7E7E7',
 		borderRadius: 16,
 		marginTop: 16,
 		marginRight: 8,
 		marginLeft: 8,
-		paddingHorizontal: 12,
-		paddingVertical: 16,
+		paddingHorizontal: 8,
+		paddingVertical: 14
 	}
 });
 
