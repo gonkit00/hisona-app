@@ -16,6 +16,12 @@ The purpose of Hisona is to make learning about history easier and more fun. By 
 * IBM Watson - Visual Recognition
 * Limdu - Machine Learning 
 
+## Experience
+
+<div align="center">
+ <img height="232px" src="hhttps://media.giphy.com/media/5YbVc5mRXOR3fOpBNs/giphy.gif"></img>
+</div>
+
 ## Contact Me
 
 Cameron Jenkinson – [Linkedin](https://www.linkedin.com/in/cameronjjenkinson/)- [GitHub](https://github.com/cjjenkinson) – camjenkinson@gmail.com
