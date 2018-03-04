@@ -15,8 +15,7 @@ class RecogniseScreen extends Component {
 	}
 
 	async componentDidMount() {
-    const { uri } = this.props.photoData;
-
+		const { uri } = this.props.photoData;
 		const resizedImage = await this.resizeImageFromUri(uri);
 		this.props.classifyImage(resizedImage.uri)
 	}
@@ -39,13 +38,13 @@ class RecogniseScreen extends Component {
 					colors={['#2575FC', '#8C5DAA', '#E64D4D']}
 				>
 					<View style={styles.container}>
-						<PulseIndicator animationDuration={2000} color="white" size={172} />
+						<PulseIndicator animationDuration={2000} color="white" size={184} />
 						<Image
 							style={styles.hisonaLogo}
 							source={require('../../assets/hisona_loading_logo.png')}
 						/>
-						<Text style={styles.loadingText}>Recognising...</Text>
 					</View>
+					<Text style={styles.loadingText}>Recognising...</Text>
 				</LinearGradient>
 			</View>
 		);
@@ -55,18 +54,21 @@ class RecogniseScreen extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
 	hisonaLogo: {
 		width: 124,
 		height: 124,
-		position: 'absolute',
-		justifyContent: 'center'
+		position: 'absolute'
 	},
 	loadingText: {
 		color: '#fff',
-		fontSize: 16
+    fontSize: 24,
+    fontFamily: 'barlow-regular',
+    alignSelf: 'center',
+    marginBottom: 80
 	}
 });
 
