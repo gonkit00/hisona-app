@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera, FileSystem, Permissions } from 'expo';
+import { MaterialIcons } from '@expo/vector-icons';
 
+import { Camera, FileSystem, Permissions } from 'expo';
 import { Actions } from 'react-native-router-flux';
 
 class CameraView extends Component {
@@ -30,11 +31,14 @@ class CameraView extends Component {
 	takePicture = async function() {
 		if (this.camera) {
 			this.camera.takePictureAsync().then(photoData => {
-				// dispatch, recognise_image_request
 				Actions.push('recogniseScreen', { photoData });
 			});
 		}
 	};
+
+	dismissView() {
+		Actions.pop();
+	}
 
 	render() {
 		const { hasCameraPermission } = this.state;
@@ -52,7 +56,16 @@ class CameraView extends Component {
 						this.camera = ref;
 					}}
 				>
-					<View style={styles.actionsContainer}>
+					<View style={styles.actionsHeader}>
+						<TouchableOpacity onPress={() => this.dismissView()}>
+							<MaterialIcons
+								name="close"
+								size={32}
+								style={styles.dismissButton}
+							/>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.actionsFooter}>
 						<TouchableOpacity
 							style={styles.snapButton}
 							onPress={this.takePicture.bind(this)}
@@ -65,12 +78,22 @@ class CameraView extends Component {
 }
 
 const styles = StyleSheet.create({
-	actionsContainer: {
-		flex: 1,
+	actionsHeader: {
 		backgroundColor: 'transparent',
+		padding: 32
+	},
+	dismissButton: {
+		color: 'white',
+		position: 'absolute',
+		top: 0,
+		left: 0
+	},
+	actionsFooter: {
+		backgroundColor: 'transparent',
+		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		marginBottom: 24
+		padding: 32
 	},
 	snapButton: {
 		height: 80,
@@ -78,7 +101,7 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(0, 0, 0, 0.3)',
 		borderRadius: 40,
 		borderColor: 'white',
-		borderWidth: 3,
+		borderWidth: 4,
 		alignSelf: 'flex-end'
 	}
 });
