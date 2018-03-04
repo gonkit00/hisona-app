@@ -4,18 +4,18 @@
 
 ## Hisona App
 
-Hisona is a cross platform app that allows people to have a conversation with Historical artefacts including public landmarks, monuments and museum artefacts.
+Hisona is a cross platform app that makes it possible for people to have a conversation with historical artefacts like public landmarks, monuments and pieces inside museums.
 
-Hisona is purpose is about making the history around us more accessible, engaging and a two-way educational experience by using AI to bring historical artefacts to 'life'.
+The purpose of Hisona is to make learning about history easier and more fun. By leveraging AI technolohies Hisona makes the history around us more accessible, engaging and a two-way conversational experience to bring historical artefacts to 'life'.
 
-Tech Stack
+## Tech Stack
 
-- React Native - Front end library for building user interfaces
-- Reduc - State management
-- Node Koa - Back end web framework
-- IBM Watson - Visual Recognition
-- Limdu - Machine Learning 
+* React Native - Front end library for building user interfaces
+* Reduc - State management
+* Node Koa - Back end web framework
+* IBM Watson - Visual Recognition
+* Limdu - Machine Learning 
 
-Contact Me
+## Contact Me
 
-Cameron Jenkinson – Linkedin- GitHub – camjenkinson@gmail.com
+Cameron Jenkinson – [Linkedin](https://www.linkedin.com/in/cameronjjenkinson/)- [GitHub](https://github.com/cjjenkinson) – camjenkinson@gmail.com
