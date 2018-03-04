@@ -6,7 +6,7 @@
 
 import config from '~/config/api';
 
-const BASE_ENDPOINT = config.base_endpoint;
+const BASE_ENDPOINT = config.prod_base_endpoint;
 
 const RecogniseService = {
 	async classifyImage(uri) {
@@ -47,10 +47,9 @@ const RecogniseService = {
 	},
 
 	async mapClassToArtefact(classData) {
-    const url = `${BASE_ENDPOINT}/classification/image/map`;
+		const url = `${BASE_ENDPOINT}/classification/image/map`;
 
 		try {
-
 			const opts = {
 				method: 'POST',
 				body: JSON.stringify(classData)
@@ -64,8 +63,7 @@ const RecogniseService = {
 
 			// Response was ok
 			const artefact = await response.json();
-      return artefact;
-
+			return artefact;
 		} catch (error) {
 			console.error(error);
 		}

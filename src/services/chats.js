@@ -6,7 +6,7 @@
 
 import config from '~/config/api';
 
-const BASE_ENDPOINT = config.base_endpoint;
+const BASE_ENDPOINT = config.prod_base_endpoint;
 
 const ChatsService = {
 	async fetchArtefacts() {
