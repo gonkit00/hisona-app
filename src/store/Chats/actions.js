@@ -44,11 +44,16 @@ export const getChats = () => async (dispatch, getState) => {
 	}
 };
 
-export const openThread = (threadId, artefactName) => dispatch => {
+export const openThread = (threadId, artefactId, artefactName) => dispatch => {
 	dispatch({
 		type: types.CHATS_THREAD_OPENED,
 		threadId
 	});
+
+	// dispatch({
+	// 	type: types.CHATS_THREAD_READ,
+	// 	artefactId
+	// });
 
 	Actions.chatScreen({ title: artefactName });
 };
@@ -60,6 +65,7 @@ export const addMessage = message => ({
 
 export const addReply = (artefact_id, text) => async (dispatch, getState) => {
 	try {
+		dispatch({ type: types.CHATS_TYPING_INDICATOR });
 		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED });
 
 		const opts = {
@@ -71,12 +77,15 @@ export const addReply = (artefact_id, text) => async (dispatch, getState) => {
 
 		if (!replyData) {
 			throw new Error('No reply data returned from the service');
-		}
+    }
 
-		dispatch({
-			type: types.CHATS_THREAD_REPLY_FETCHED_SUCCESS,
-			reply: replyData.reply
-		});
+		setTimeout(() => {
+			dispatch({
+				type: types.CHATS_THREAD_REPLY_FETCHED_SUCCESS,
+				reply: replyData.reply
+			});
+    }, 3000);
+
 	} catch (error) {
 		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED_FAILURE, error });
 	}

@@ -29,20 +29,38 @@ export default function reduce(state = initialState, action = {}) {
 				isLoading: false
 			});
 		case types.CHATS_THREAD_OPENED:
-			const current = state.allChats.filter(
-				chat => chat.conversation_id === action.threadId
-			);
+			const current = getCurrentChat(state, action.threadId);
 			return state.merge({
 				currentArtefact: current,
 				currentThread: current[0].thread
 			});
+		// case types.CHATS_THREAD_READ:
+		// 	const chat = state.allChats.filter(
+		// 		chat => chat.artefact_id === action.artefactId
+		// 	)[0];
+		// 	return state.merge({
+		// 		allChats: [Immutable.update(chat, 'read', markRead), ...state.allChats]
+		// 	});
+		// 	return state;
 		case types.CHATS_THREAD_NEW_MESSAGE:
 			return state.merge({
 				currentThread: [...state.currentThread, action.message]
 			});
+		case types.CHATS_TYPING_INDICATOR:
+			return state.merge({
+				currentThread: [
+					...state.currentThread,
+					{
+						content_type: 'typing_indicator',
+						direction: 'left',
+						duration: '3000'
+					}
+				],
+				isLoading: false
+			});
 		case types.CHATS_THREAD_REPLY_FETCHED_SUCCESS:
 			return state.merge({
-				currentThread: [...state.currentThread, ...action.reply],
+				currentThread: state.currentThread.slice(0, -1).concat(action.reply),
 				isLoading: false
 			});
 		case types.CHATS_ARTEFACTS_FETCHED_FAILURE:
@@ -58,6 +76,13 @@ export default function reduce(state = initialState, action = {}) {
 }
 
 /** Selectors */
+
+const getCurrentChat = (state, conversationId) => {
+	const current = state.allChats.filter(
+		chat => chat.conversation_id === conversationId
+	);
+	return current;
+};
 
 export const isLoading = state => {
 	const loadingStatus = state.chats.isLoading;
