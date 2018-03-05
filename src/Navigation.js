@@ -11,7 +11,6 @@ import CameraScreen from '~/screens/CameraScreen';
 import RecogniseScreen from '~/screens/RecogniseScreen';
 import MatchScreen from '~/screens/MatchScreen';
 
-
 const Navigation = () => (
 	<Router>
 		<Modal hideNavBar>
@@ -32,6 +31,7 @@ const Navigation = () => (
 					key="chatScreen"
 					component={ChatScreen}
 					titleStyle={{ fontFamily: 'barlow-medium', fontSize: 20 }}
+          back
 				/>
 			</Scene>
 			<Scene key="cameraScreen" component={CameraScreen} back navTransparent />
