@@ -27,7 +27,8 @@
     "android": "react-native-scripts android",
     "ios": "react-native-scripts ios",
     "test": "node node_modules/jest/bin/jest.js",
-    "lint": "./node_modules/.bin/eslint ./src"
+    "lint": "./node_modules/.bin/eslint ./src",
+    "precommit": "lint-staged"
   },
   "jest": {
     "preset": "jest-expo"
