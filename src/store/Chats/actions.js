@@ -1,96 +1,90 @@
 import keyBy from 'lodash/keyBy';
-import * as types from './actionTypes';
-import ChatsService from '~/services/chats';
 import { Actions } from 'react-native-router-flux';
 
-export const getArtefacts = () => async (dispatch, getState) => {
-	try {
-		dispatch({ type: types.CHATS_ARTEFACTS_FETCHED });
-		const artefacts = await ChatsService.fetchArtefacts();
+import * as types from './actionTypes';
+import ChatsService from '~/services/chats';
 
-		if (!artefacts) {
-			throw new Error('Artefacts fetch request failed');
-		}
+export const getArtefacts = () => async (dispatch) => {
+  try {
+    dispatch({ type: types.CHATS_ARTEFACTS_FETCHED });
+    const artefacts = await ChatsService.fetchArtefacts();
 
-		// Normalise the artefacts
-		const artefactsById = keyByIds(artefacts);
+    if (!artefacts) {
+      throw new Error('Artefacts fetch request failed');
+    }
 
-		dispatch({
-			type: types.CHATS_ARTEFACTS_FETCHED_SUCCESS,
-			artefactsById
-		});
-	} catch (error) {
-		dispatch({ type: types.CHATS_ARTEFACTS_FETCHED_FAILURE, error });
-	}
+    // Normalise the artefacts
+    const artefactsById = keyByIds(artefacts);
+
+    dispatch({
+      type: types.CHATS_ARTEFACTS_FETCHED_SUCCESS,
+      artefactsById,
+    });
+  } catch (error) {
+    dispatch({ type: types.CHATS_ARTEFACTS_FETCHED_FAILURE, error });
+  }
 };
 
-export const getChats = () => async (dispatch, getState) => {
-	try {
-		dispatch({ type: types.CHATS_FETCHED });
-		const chats = await ChatsService.fetchChats();
+export const getChats = () => async (dispatch) => {
+  try {
+    dispatch({ type: types.CHATS_FETCHED });
+    const chats = await ChatsService.fetchChats();
 
-		if (!chats) {
-			throw new Error('Chats fetch request failed');
-		}
+    if (!chats) {
+      throw new Error('Chats fetch request failed');
+    }
 
-		// Normalise the chats
-		// const chatsById = keyByIds(chats, conversation_id);
-		dispatch({
-			type: types.CHATS_FETCHED_SUCCESS,
-			chats
-		});
-	} catch (error) {
-		dispatch({ type: types.CHATS_FETCHED_FAILURE, error });
-	}
+    // Normalise the chats
+    // const chatsById = keyByIds(chats, conversation_id);
+    dispatch({
+      type: types.CHATS_FETCHED_SUCCESS,
+      chats,
+    });
+  } catch (error) {
+    dispatch({ type: types.CHATS_FETCHED_FAILURE, error });
+  }
 };
 
-export const openThread = (threadId, artefactId, artefactName) => dispatch => {
-	dispatch({
-		type: types.CHATS_THREAD_OPENED,
-		threadId
-	});
+export const openThread = (threadId, artefactId, artefactName) => (dispatch) => {
+  dispatch({
+    type: types.CHATS_THREAD_OPENED,
+    threadId,
+  });
 
-	// dispatch({
-	// 	type: types.CHATS_THREAD_READ,
-	// 	artefactId
-	// });
-
-	Actions.chatScreen({ title: artefactName });
+  Actions.chatScreen({ title: artefactName });
 };
 
 export const addMessage = message => ({
-	type: types.CHATS_THREAD_NEW_MESSAGE,
-	message
+  type: types.CHATS_THREAD_NEW_MESSAGE,
+  message,
 });
 
-export const addReply = (artefact_id, text) => async (dispatch, getState) => {
-	try {
-		dispatch({ type: types.CHATS_TYPING_INDICATOR });
-		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED });
+export const addReply = (artefactId, text) => async (dispatch) => {
+  try {
+    dispatch({ type: types.CHATS_TYPING_INDICATOR });
+    dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED });
 
-		const opts = {
-			artefact_id,
-			text
-		};
+    const opts = {
+      artefact_id: artefactId,
+      text,
+    };
 
-		const replyData = await ChatsService.fetchReply(opts);
+    const replyData = await ChatsService.fetchReply(opts);
 
-		if (!replyData) {
-			throw new Error('No reply data returned from the service');
+    if (!replyData) {
+      throw new Error('No reply data returned from the service');
     }
 
-		setTimeout(() => {
-			dispatch({
-				type: types.CHATS_THREAD_REPLY_FETCHED_SUCCESS,
-				reply: replyData.reply
-			});
+    setTimeout(() => {
+      dispatch({
+        type: types.CHATS_THREAD_REPLY_FETCHED_SUCCESS,
+        reply: replyData.reply,
+      });
     }, 3000);
-
-	} catch (error) {
-		dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED_FAILURE, error });
-	}
+  } catch (error) {
+    dispatch({ type: types.CHATS_THREAD_REPLY_FETCHED_FAILURE, error });
+  }
 };
 
 // Normalise utilities
-const keyByIds = artefacts =>
-	keyBy(artefacts, artefact => artefact.artefact_id);
+const keyByIds = artefacts => keyBy(artefacts, artefact => artefact.artefact_id);
