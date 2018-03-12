@@ -9,6 +9,7 @@ import ChatScreen from '~/screens/ChatScreen';
 import CameraScreen from '~/screens/CameraScreen';
 import RecogniseScreen from '~/screens/RecogniseScreen';
 import MatchScreen from '~/screens/MatchScreen';
+import MapScreen from '~/screens/MapScreen';
 
 const Navigation = () => (
   <Router>
@@ -24,6 +25,11 @@ const Navigation = () => (
               <MaterialIcons name="add" size={32} />
             </TouchableOpacity>
           )}
+          renderLeftButton={() => (
+            <TouchableOpacity onPress={() => Actions.mapScreen()}>
+              <MaterialIcons name="add" size={32} />
+            </TouchableOpacity>
+          )}
           initial
         />
         <Scene
@@ -33,6 +39,7 @@ const Navigation = () => (
           back
         />
       </Scene>
+      <Scene key="mapScreen" component={MapScreen} back navTransparent />
       <Scene key="cameraScreen" component={CameraScreen} back navTransparent />
       <Scene key="recogniseScreen" component={RecogniseScreen} navTransparent />
       <Scene key="matchScreen" component={MatchScreen} navTransparent />
