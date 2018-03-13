@@ -10,6 +10,7 @@ import * as Selectors from '~/store/ArtefactCollection/reducer';
 
 import * as chatActions from '~/store/Chats/actions';
 //import * as chatSelectors from '~/store/Chats/reducer';
+import ThreadService from '~/services/getThread';
 
 
 const styles = StyleSheet.create({
@@ -65,9 +66,12 @@ class MapScreen extends Component {
     Actions.pop();
   };
 
-  openThread = (artefact_id, artefact_name) => {
-    // Filter out conversation id with artifact  id
-    this.props.openThread(1, artefact_id, artefact_name);
+  openThread = async (artefact_id, artefact_name) => {
+    const response = await ThreadService.fetchThread(artefact_id);
+    console.log('Kimba', response.message);
+    await this.props.getArtefacts();
+    await this.props.getChats();
+    this.props.openThread(response.message, artefact_id, artefact_name);
   }
 
   renderArtefactMarkers = () => {
@@ -92,7 +96,6 @@ class MapScreen extends Component {
 
   render() {
     const artefactCollection = JSON.stringify(this.props.artefactCollection);
-    console.log('Kimba: ', this.props.artefactCollection);
     return (
       <View style={styles.container}>
         <MapView
@@ -122,6 +125,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
+  getArtefacts: () => dispatch(chatActions.getArtefacts()),
+  getChats: () => dispatch(chatActions.getChats()),
   openThread: (threadId, artefactId, artefactName) =>
     dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
 

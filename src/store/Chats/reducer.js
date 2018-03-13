@@ -77,7 +77,7 @@ export default function reduce(state = initialState, action = {}) {
 /** Selectors */
 
 const getCurrentChat = (state, conversationId) => {
-  const current = state.allChats.filter(chat => chat.conversation_id === conversationId);
+  const current = state.allChats.filter(chat => chat.conversation_id == conversationId);
   return current;
 };
 
