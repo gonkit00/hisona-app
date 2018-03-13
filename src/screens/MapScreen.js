@@ -66,7 +66,7 @@ class MapScreen extends Component {
   };
 
   openThread = (artefact_id, artefact_name) => {
-    // Filter out conversation id with artifact  id 
+    // Filter out conversation id with artifact  id
     this.props.openThread(1, artefact_id, artefact_name);
   }
 
@@ -129,3 +129,5 @@ const mapDispatchToProps = dispatch => ({
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
+
+//Kimba!
