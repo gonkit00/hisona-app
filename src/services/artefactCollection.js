@@ -5,7 +5,7 @@ const BASE_ENDPOINT = config.dev_base_endpoint;
 const ArtefactCollectionService = {
 
   async fetchArtefactCollection() {
-    const url = `${BASE_ENDPOINT}/artefacts`;
+    const url = `${BASE_ENDPOINT}/user/all-artefacts`;
 
     try {
       const response = await fetch(url);
