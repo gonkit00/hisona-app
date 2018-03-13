@@ -15,6 +15,12 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
   },
+  bubble: {
+    display: 'flex',
+    fontSize: 12,
+    flexWrap: 'wrap',
+    width: 250,
+  },
   paragraph: {
     margin: 24,
     fontSize: 18,
@@ -74,22 +80,26 @@ class MapScreen extends Component {
       return (
         <MapView.Marker
           coordinate={artefact.coordinates}
-          title={artefact.artefact_name}
-          description={artefact.default_onboarding_message[0].text}
           key={artefact._id}
-          style={{display: 'flex', flexWrap: 'wrap'}}
-        />
+        >
+          <MapView.Callout onPress={() => console.log('callout was clicked')}>
+            <Text style={styles.bubble}>
+              {artefact.artefact_name}
+              {artefact.default_onboarding_message[0].text}
+              </Text>
+          </MapView.Callout>
+        </MapView.Marker>
       )
     });
   }
 
   render() {
     const artefactCollection = JSON.stringify(this.props.artefactCollection);
-    console.log('Kimba: ',this.props.artefactCollection);
+    console.log('Kimba: ', this.props.artefactCollection);
     return (
       <View style={styles.container}>
         <MapView
-          style={{ alignSelf: 'stretch', height: 200}}
+          style={{ alignSelf: 'stretch', height: 200 }}
           region={{
             latitude: this.state.location.coords.latitude,
             longitude: this.state.location.coords.longitude,
@@ -114,7 +124,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
+  getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
 
 });
 
