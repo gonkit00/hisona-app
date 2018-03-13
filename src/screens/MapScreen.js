@@ -15,10 +15,13 @@ const styles = StyleSheet.create({
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
   },
-  bubble: {
-    display: 'flex',
+  bubbleTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    width: 250,
+  },
+  bubbleDescription: {
     fontSize: 12,
-    flexWrap: 'wrap',
     width: 250,
   },
   paragraph: {
@@ -83,10 +86,12 @@ class MapScreen extends Component {
           key={artefact._id}
         >
           <MapView.Callout onPress={() => console.log('callout was clicked')}>
-            <Text style={styles.bubble}>
+            <Text style={styles.bubbleTitle}>
               {artefact.artefact_name}
+            </Text>
+            <Text style={styles.bubbleDescription}>
               {artefact.default_onboarding_message[0].text}
-              </Text>
+            </Text>
           </MapView.Callout>
         </MapView.Marker>
       )
