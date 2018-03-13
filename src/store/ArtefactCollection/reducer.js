@@ -19,3 +19,5 @@ export const getArtefactCollection = (state) => {
   const artefactCollection = state.artefact.artefactCollection;
   return artefactCollection;
 };
+
+//Test of git commit 
