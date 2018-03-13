@@ -4,8 +4,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Actions } from 'react-native-router-flux';
 import { Constants, Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
+
 import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
 import * as Selectors from '~/store/ArtefactCollection/reducer';
+
+import * as chatActions from '~/store/Chats/actions';
+//import * as chatSelectors from '~/store/Chats/reducer';
+
 
 const styles = StyleSheet.create({
   container: {
@@ -23,24 +28,6 @@ const styles = StyleSheet.create({
   bubbleDescription: {
     fontSize: 12,
     width: 250,
-  },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#34495e',
-  },
-  inputText: {
-    height: 60,
-    marginTop: 40,
-    fontSize: 22,
-    margin: 16,
-    borderColor: 'gray',
-    borderRadius: 4,
-    borderWidth: 1,
-    alignSelf: 'stretch',
-    padding: 10,
   },
 });
 
@@ -78,6 +65,11 @@ class MapScreen extends Component {
     Actions.pop();
   };
 
+  openThread = (artefact_id, artefact_name) => {
+    // Filter out conversation id with artifact  id 
+    this.props.openThread(1, artefact_id, artefact_name);
+  }
+
   renderArtefactMarkers = () => {
     return this.props.artefactCollection.map(artefact => {
       return (
@@ -85,7 +77,7 @@ class MapScreen extends Component {
           coordinate={artefact.coordinates}
           key={artefact._id}
         >
-          <MapView.Callout onPress={() => console.log('callout was clicked')}>
+          <MapView.Callout onPress={() => this.openThread(artefact.artefact_id, artefact.artefact_name)}>
             <Text style={styles.bubbleTitle}>
               {artefact.artefact_name}
             </Text>
@@ -130,6 +122,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
+  openThread: (threadId, artefactId, artefactName) =>
+    dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
 
 });
 
