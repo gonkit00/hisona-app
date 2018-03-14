@@ -69,12 +69,21 @@ export default function reduce(state = initialState, action = {}) {
         error: action.error.message,
         isLoading: false,
       });
+
+    case types.CHATS_ARTEFACTS_EXISTS:
+      const current = getCurrentArtefactChat(state, action.artefactId);
+
     default:
       return state;
   }
 }
 
 /** Selectors */
+
+const getCurrentArtefactChat = (state, artefactId) => {
+  const current = state.allChats.filter(chat => chat.artefact_id == artefactId);
+  return current;
+};
 
 const getCurrentChat = (state, conversationId) => {
   const current = state.allChats.filter(chat => chat.conversation_id == conversationId);

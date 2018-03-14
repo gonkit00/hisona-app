@@ -9,7 +9,7 @@ import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
 import * as Selectors from '~/store/ArtefactCollection/reducer';
 
 import * as chatActions from '~/store/Chats/actions';
-//import * as chatSelectors from '~/store/Chats/reducer';
+import * as chatSelectors from '~/store/Chats/reducer';
 import ThreadService from '~/services/getThread';
 
 
@@ -66,13 +66,16 @@ class MapScreen extends Component {
     Actions.pop();
   };
 
-  openThread = async (artefact_id, artefact_name) => {
-    const response = await ThreadService.fetchThread(artefact_id);
-    console.log('Kimba', response.message);
-    await this.props.getArtefacts();
-    await this.props.getChats();
-    this.props.openThread(response.message, artefact_id, artefact_name);
+  openThread = async (artefact_id, artefact_name) => {    if(this.props.artefactChat(state, artefact_id)) {
+      this.props.openThread(this.props.artefactChat.conversation_id, artefact_id, artefact_name);
+    }
+    // await this.props.getArtefacts();
+    // await this.props.getChats();
   }
+
+  // openThread = async (artefact_id, artefact_name) =>
+  //     this.props.openMapThread(artefact_id, artefact_name);
+
 
   renderArtefactMarkers = () => {
     return this.props.artefactCollection.map(artefact => {
@@ -120,15 +123,18 @@ class MapScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  artefactCollection: Selectors.getArtefactCollection(state)
+  artefactCollection: Selectors.getArtefactCollection(state),
+  artefactChat: chatSelectors.getCurrentArtefactChat(state, artefactId)
+
 });
 
 const mapDispatchToProps = dispatch => ({
+  getExistingChat: (artefactId) => dispatch(chatActions.openMapThread(artefactId, artefactName))
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
   getArtefacts: () => dispatch(chatActions.getArtefacts()),
   getChats: () => dispatch(chatActions.getChats()),
-  openThread: (threadId, artefactId, artefactName) =>
-    dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
+  openThread: (artefactId, artefactName) =>
+    dispatch(chatActions.openThread(artefactId, artefactName)),
 
 });
 

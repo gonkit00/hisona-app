@@ -45,6 +45,24 @@ export const getChats = () => async (dispatch) => {
   }
 };
 
+export const openMapThread = (artefactId, artefactName) => (dispatch) => {
+
+// try {
+//   dispatch({ type: types.CHATS_ARTEFACTS_EXISTS });
+//   let threadId = await ThreadService.fetchThread(artefact_id);
+//   threadId = threadId.message;
+// } catch (e) {
+//
+// }
+
+  dispatch({
+    type: types.CHATS_THREAD_OPENED,
+    threadId,
+  });
+
+  Actions.chatScreen({ title: artefactName });
+};
+
 export const openThread = (threadId, artefactId, artefactName) => (dispatch) => {
   dispatch({
     type: types.CHATS_THREAD_OPENED,
