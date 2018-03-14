@@ -128,7 +128,6 @@ const mapDispatchToProps = dispatch => ({
   getChats: () => dispatch(chatActions.getChats()),
   openThread: (threadId, artefactId, artefactName) =>
     dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
-
 });
 
 

@@ -9,6 +9,8 @@ import * as chatActions from '~/store/Chats/actions';
 // import * as chatSelectors from '~/store/Chats/reducer';
 import * as Selectors from '~/store/ArtefactCollection/reducer';
 import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
+import ThreadService from '~/services/getThread';
+
 
 const styles = StyleSheet.create({
  container: {
@@ -58,16 +60,17 @@ class GeoScreen extends Component {
   }
 
   async componentDidMount() {
-   await this.getLocationAsync();
+   await this.getLocation();
    await this.props.getArtefactCollection();
    await this.getClosestArtefact();
+   await this.watchLocation();
   }
 
   componentWillUnmount() {
     clearInterval(this.setTimeoutId);
   }
 
-  getLocationAsync = async () => {
+  getLocation = async () => {
    const { status } = await Permissions.askAsync(Permissions.LOCATION);
    if (status !== 'granted') {
      this.setState({ errorMessage: 'Permission to access location was denied' });
@@ -77,9 +80,13 @@ class GeoScreen extends Component {
    this.setState({
      location,
    });
-   // this.setTimeoutId = setInterval(async () => {
-   // }, 1000);
 
+  };
+
+  watchLocation = () => {
+   this.setTimeoutId = setInterval(() => {
+     this.getLocation();
+   }, 1000);
   };
 
   getDistanceFromLatLonInMt = (lat1,lon1,lat2,lon2) => {
@@ -112,20 +119,30 @@ class GeoScreen extends Component {
 
   }
 
+  openThread = async (artefact_id, artefact_name) => {
+    const response = await ThreadService.fetchThread(artefact_id);
+    this.props.openThread(response.message, artefact_id, artefact_name);
+  }
+
   render() {
     let text = 'Waiting..';
     let distance = null;
      if (this.state.errorMessage) {
        text = this.state.errorMessage;
-     } else if (this.state.location) {
+     } else if (this.state.location && this.state.closestArtefact) {
        text = this.state.location.coords.latitude;
-       distance = this.getDistanceFromLatLonInMt(this.artefactCoordinates.latitude, this.artefactCoordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)
+       distance = this.getDistanceFromLatLonInMt(this.state.closestArtefact.coordinates.latitude, this.state.closestArtefact.coordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)
      }
-     if (this.closestArtefact) console.log('kimba',this.closestArtefact.artefact_name);
+     // if (this.state.closestArtefact && distance && distance < 10) {
+     //   this.openThread(this.state.closestArtefact.artefact_id, this.state.closestArtefact.artefact_name)
+     // }
    return (
      <View style={styles.container}>
        <Text>
          Hi, I'm {this.state.closestArtefact ? this.state.closestArtefact.artefact_name : null}
+       </Text>
+       <Text>
+         Find me!
        </Text>
        <Text>
          Distance: {distance}
@@ -142,6 +159,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
+  openThread: (threadId, artefactId, artefactName) =>
+    dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
 });
 
 
