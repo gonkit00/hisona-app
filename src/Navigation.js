@@ -26,11 +26,11 @@ const Navigation = () => (
               <MaterialIcons name="add" size={32} />
             </TouchableOpacity>
           )}
-          renderLeftButton={() => (
-            <TouchableOpacity onPress={() => Actions.mapScreen()}>
-              <MaterialIcons name="add" size={32} />
-            </TouchableOpacity>
-          )}
+          // renderLeftButton={() => (
+          //   <TouchableOpacity onPress={() => Actions.mapScreen()}>
+          //     <MaterialIcons name="add" size={32} />
+          //   </TouchableOpacity>
+          // )}
           renderLeftButton={() => (
             <TouchableOpacity onPress={() => Actions.geoScreen()}>
               <MaterialIcons name="add" size={32} />

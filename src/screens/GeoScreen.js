@@ -6,7 +6,9 @@ import { Constants, Location, Permissions, MapView } from 'expo';
 import get from 'lodash/get';
 import { connect } from 'react-redux';
 import * as chatActions from '~/store/Chats/actions';
-import * as chatSelectors from '~/store/Chats/reducer';
+// import * as chatSelectors from '~/store/Chats/reducer';
+import * as Selectors from '~/store/ArtefactCollection/reducer';
+import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
 
 const styles = StyleSheet.create({
  container: {
@@ -43,6 +45,8 @@ class GeoScreen extends Component {
     this.state = {
       location: null,
       errorMessage: null,
+      closestArtefact: null,
+      closestDistance: null
     };
 
     this.artefactCoordinates = {
@@ -53,8 +57,10 @@ class GeoScreen extends Component {
     this.setTimeoutId = null;
   }
 
-  componentDidMount() {
-   this.getLocationAsync();
+  async componentDidMount() {
+   await this.getLocationAsync();
+   await this.props.getArtefactCollection();
+   await this.getClosestArtefact();
   }
 
   componentWillUnmount() {
@@ -67,16 +73,16 @@ class GeoScreen extends Component {
      this.setState({ errorMessage: 'Permission to access location was denied' });
    }
 
-   this.setTimeoutId = setInterval(async () => {
-     const location = await Location.getCurrentPositionAsync({});
-     this.setState({
-       location,
-     });
-   }, 1000);
+   const location = await Location.getCurrentPositionAsync({});
+   this.setState({
+     location,
+   });
+   // this.setTimeoutId = setInterval(async () => {
+   // }, 1000);
 
   };
 
-  getDistanceFromLatLonInKm = (lat1,lon1,lat2,lon2) => {
+  getDistanceFromLatLonInMt = (lat1,lon1,lat2,lon2) => {
     var R = 6371; // Radius of the earth in km
     var dLat = this.deg2rad(lat2-lat1);  // this.deg2rad below
     var dLon = this.deg2rad(lon2-lon1);
@@ -86,12 +92,24 @@ class GeoScreen extends Component {
       Math.sin(dLon/2) * Math.sin(dLon/2)
       ;
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    var d = R * c; // Distance in km
+    var d = R * c * 1000; // Distance in meters
     return d;
   }
 
   deg2rad = deg => {
     return deg * (Math.PI/180)
+  }
+
+  getClosestArtefact = () => {
+    this.setState({closestArtefact: this.props.artefactCollection[0]});
+    this.setState({closestDistance: this.getDistanceFromLatLonInMt(this.props.artefactCollection[0].coordinates.latitude, this.props.artefactCollection[0].coordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)});
+    this.props.artefactCollection.forEach(artefact => {
+      if (this.getDistanceFromLatLonInMt(artefact.coordinates.latitude, artefact.coordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude) < this.state.closestDistance) {
+        this.setState({closestArtefact: artefact});
+        this.setState({closestDistance: this.getDistanceFromLatLonInMt(artefact.coordinates.latitude, artefact.coordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)});
+      }
+    });
+
   }
 
   render() {
@@ -101,10 +119,14 @@ class GeoScreen extends Component {
        text = this.state.errorMessage;
      } else if (this.state.location) {
        text = this.state.location.coords.latitude;
-       distance = this.getDistanceFromLatLonInKm(this.artefactCoordinates.latitude, this.artefactCoordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)
+       distance = this.getDistanceFromLatLonInMt(this.artefactCoordinates.latitude, this.artefactCoordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)
      }
+     if (this.closestArtefact) console.log('kimba',this.closestArtefact.artefact_name);
    return (
      <View style={styles.container}>
+       <Text>
+         Hi, I'm {this.state.closestArtefact ? this.state.closestArtefact.artefact_name : null}
+       </Text>
        <Text>
          Distance: {distance}
        </Text>
@@ -114,16 +136,12 @@ class GeoScreen extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
- const artefactsById = chatSelectors.getArtefactsById(state);
- return {
-   artefactsById,
- };
-};
+const mapStateToProps = (state) => ({
+  artefactCollection: Selectors.getArtefactCollection(state)
+});
 
 const mapDispatchToProps = dispatch => ({
- // getArtefacts: () => dispatch(chatActions.getArtefacts()),
-
+  getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
 });
 
 

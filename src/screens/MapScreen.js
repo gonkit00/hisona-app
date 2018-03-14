@@ -68,7 +68,6 @@ class MapScreen extends Component {
 
   openThread = async (artefact_id, artefact_name) => {
     const response = await ThreadService.fetchThread(artefact_id);
-    console.log('Kimba', response.message);
     await this.props.getArtefacts();
     await this.props.getChats();
     this.props.openThread(response.message, artefact_id, artefact_name);
