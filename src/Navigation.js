@@ -10,6 +10,7 @@ import CameraScreen from '~/screens/CameraScreen';
 import RecogniseScreen from '~/screens/RecogniseScreen';
 import MatchScreen from '~/screens/MatchScreen';
 import MapScreen from '~/screens/MapScreen';
+import GeoScreen from '~/screens/GeoScreen';
 
 const Navigation = () => (
   <Router>
@@ -30,6 +31,11 @@ const Navigation = () => (
               <MaterialIcons name="add" size={32} />
             </TouchableOpacity>
           )}
+          renderLeftButton={() => (
+            <TouchableOpacity onPress={() => Actions.geoScreen()}>
+              <MaterialIcons name="add" size={32} />
+            </TouchableOpacity>
+          )}
           initial
         />
         <Scene
@@ -39,6 +45,7 @@ const Navigation = () => (
           back
         />
       </Scene>
+      <Scene key="geoScreen" component={GeoScreen} back navTransparent />
       <Scene key="mapScreen" component={MapScreen} back navTransparent />
       <Scene key="cameraScreen" component={CameraScreen} back navTransparent />
       <Scene key="recogniseScreen" component={RecogniseScreen} navTransparent />
