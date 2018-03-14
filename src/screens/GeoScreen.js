@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
  paragraph: {
    margin: 24,
    fontSize: 18,
-   fontWeight: 'bold',
    textAlign: 'center',
    color: '#34495e',
  },
@@ -48,7 +47,8 @@ class GeoScreen extends Component {
       location: null,
       errorMessage: null,
       closestArtefact: null,
-      closestDistance: null
+      closestDistance: null,
+      found: null
     };
 
     this.artefactCoordinates = {
@@ -84,8 +84,10 @@ class GeoScreen extends Component {
   };
 
   watchLocation = () => {
-   this.setTimeoutId = setInterval(() => {
-     this.getLocation();
+    //TODO: use watch coordinates method
+   this.setTimeoutId = setInterval( async () => {
+     await this.getLocation();
+     this.checkDistance();
    }, 1000);
   };
 
@@ -124,28 +126,41 @@ class GeoScreen extends Component {
     this.props.openThread(response.message, artefact_id, artefact_name);
   }
 
+  checkDistance = () => {
+    const { location, closestArtefact } = this.state;
+    const distance = (location && closestArtefact) ? this.getDistanceFromLatLonInMt(closestArtefact.coordinates.latitude, closestArtefact.coordinates.longitude, location.coords.latitude, location.coords.longitude) : null;
+    if (distance && distance < 20) {
+      clearInterval(this.setTimeoutId);
+      this.renderFound();
+      this.openThread(closestArtefact.artefact_id, closestArtefact.artefact_name);
+    }
+  }
+
+  renderFound = () => {
+    this.setState({found: 'YOU FOUND IT!'})
+  }
+
+  renderDistance = () => {
+    const { location, closestArtefact } = this.state;
+    return (location && closestArtefact) ? this.getDistanceFromLatLonInMt(closestArtefact.coordinates.latitude, closestArtefact.coordinates.longitude, location.coords.latitude, location.coords.longitude) : null;
+  }
+
   render() {
-    let text = 'Waiting..';
-    let distance = null;
-     if (this.state.errorMessage) {
-       text = this.state.errorMessage;
-     } else if (this.state.location && this.state.closestArtefact) {
-       text = this.state.location.coords.latitude;
-       distance = this.getDistanceFromLatLonInMt(this.state.closestArtefact.coordinates.latitude, this.state.closestArtefact.coordinates.longitude, this.state.location.coords.latitude, this.state.location.coords.longitude)
-     }
-     // if (this.state.closestArtefact && distance && distance < 10) {
-     //   this.openThread(this.state.closestArtefact.artefact_id, this.state.closestArtefact.artefact_name)
-     // }
+    const { errorMessage, location, closestArtefact, closestDistance, found } = this.state;
+
    return (
      <View style={styles.container}>
-       <Text>
-         Hi, I'm {this.state.closestArtefact ? this.state.closestArtefact.artefact_name : null}
+       <Text style={styles.paragraph}>
+         The closest artefact is: {closestArtefact ? closestArtefact.artefact_name : null}
        </Text>
-       <Text>
-         Find me!
+       <Text style={styles.paragraph}>
+         Try to catch it!
        </Text>
-       <Text>
-         Distance: {distance}
+       <Text style={styles.paragraph}>
+         Distance: {this.renderDistance()}
+       </Text>
+       <Text style={styles.paragraph}>
+         {found}
        </Text>
      </View>
 

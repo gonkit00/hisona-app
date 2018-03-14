@@ -6,10 +6,10 @@ import { Constants, Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 
 import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
-import * as Selectors from '~/store/ArtefactCollection/reducer';
+import * as ArtefactCollectionSelectors from '~/store/ArtefactCollection/reducer';
+import * as ChatSelectors from '~/store/Chats/reducer';
 
 import * as chatActions from '~/store/Chats/actions';
-//import * as chatSelectors from '~/store/Chats/reducer';
 import ThreadService from '~/services/getThread';
 
 
@@ -119,7 +119,7 @@ class MapScreen extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  artefactCollection: Selectors.getArtefactCollection(state)
+  artefactCollection: ArtefactCollectionSelectors.getArtefactCollection(state)
 });
 
 const mapDispatchToProps = dispatch => ({
