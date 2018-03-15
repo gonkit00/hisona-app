@@ -2,10 +2,10 @@ import config from '~/config/api';
 
 const BASE_ENDPOINT = config.dev_base_endpoint;
 
-const ArtefactCollectionService = {
+const ThreadService = {
 
-  async fetchArtefactCollection() {
-    const url = `${BASE_ENDPOINT}/user/all-artefacts`;
+  async fetchThread(artefactId) {
+    const url = `${BASE_ENDPOINT}/user/thread/${artefactId}`;
 
     try {
       const response = await fetch(url);
@@ -23,4 +23,4 @@ const ArtefactCollectionService = {
 
 };
 
-export default ArtefactCollectionService;
+export default ThreadService;

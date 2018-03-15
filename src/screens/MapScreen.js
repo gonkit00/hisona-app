@@ -4,13 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Actions } from 'react-native-router-flux';
 import { Constants, Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
-
 import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
 import * as Selectors from '~/store/ArtefactCollection/reducer';
-
 import * as chatActions from '~/store/Chats/actions';
-//import * as chatSelectors from '~/store/Chats/reducer';
-
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +36,7 @@ class MapScreen extends Component {
           {
             latitude: 37.78825,
             longitude: -122.4324,
-          }
+          },
       },
   };
 
@@ -65,34 +61,30 @@ class MapScreen extends Component {
     Actions.pop();
   };
 
-  openThread = (artefact_id, artefact_name) => {
-    // Filter out conversation id with artifact  id
-    this.props.openThread(1, artefact_id, artefact_name);
+  openMapThread = async (artefact_id, artefact_name) => {
+    this.props.openMapThread(artefact_id, artefact_name);
   }
 
-  renderArtefactMarkers = () => {
-    return this.props.artefactCollection.map(artefact => {
-      return (
-        <MapView.Marker
-          coordinate={artefact.coordinates}
-          key={artefact._id}
-        >
-          <MapView.Callout onPress={() => this.openThread(artefact.artefact_id, artefact.artefact_name)}>
-            <Text style={styles.bubbleTitle}>
-              {artefact.artefact_name}
-            </Text>
-            <Text style={styles.bubbleDescription}>
-              {artefact.default_onboarding_message[0].text}
-            </Text>
-          </MapView.Callout>
-        </MapView.Marker>
-      )
-    });
-  }
+  renderArtefactMarkers = () => this.props.artefactCollection.map(artefact => {
+    return (
+      <MapView.Marker
+        coordinate={artefact.coordinates}
+        key={artefact._id}
+      >
+        <MapView.Callout onPress={() => this.openMapThread(artefact.artefact_id, artefact.artefact_name)}>
+          <Text style={styles.bubbleTitle}>
+            {artefact.artefact_name}
+          </Text>
+          <Text style={styles.bubbleDescription}>
+            {artefact.default_onboarding_message[0].text}
+          </Text>
+        </MapView.Callout>
+      </MapView.Marker>
+    )
+  })
 
   render() {
     const artefactCollection = JSON.stringify(this.props.artefactCollection);
-    console.log('Kimba: ', this.props.artefactCollection);
     return (
       <View style={styles.container}>
         <MapView
@@ -103,31 +95,26 @@ class MapScreen extends Component {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
-          loadingEnabled={true}
+          loadingEnabled
         >
           {this.renderArtefactMarkers()}
         </MapView>
-
-        <Text>
-        </Text>
       </View>
 
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  artefactCollection: Selectors.getArtefactCollection(state)
+const mapStateToProps = state => ({
+  artefactCollection: Selectors.getArtefactCollection(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
-  openThread: (threadId, artefactId, artefactName) =>
-    dispatch(chatActions.openThread(threadId, artefactId, artefactName)),
-
+  openMapThread: (artefactId, artefactName) =>
+    dispatch(chatActions.openMapThread(artefactId, artefactName)),
 });
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapScreen);
 
-//Kimba!
