@@ -5,6 +5,7 @@ import { Actions } from 'react-native-router-flux';
 import { Constants, Location, Permissions, MapView } from 'expo';
 import { connect } from 'react-redux';
 import * as artefactCollectionActions from '~/store/ArtefactCollection/actions';
+
 import * as Selectors from '~/store/ArtefactCollection/reducer';
 import * as chatActions from '~/store/Chats/actions';
 
@@ -61,6 +62,7 @@ class MapScreen extends Component {
     Actions.pop();
   };
 
+
   openMapThread = async (artefact_id, artefact_name) => {
     this.props.openMapThread(artefact_id, artefact_name);
   }
@@ -111,6 +113,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   getArtefactCollection: () => dispatch(artefactCollectionActions.getArtefactCollection()),
+
   openMapThread: (artefactId, artefactName) =>
     dispatch(chatActions.openMapThread(artefactId, artefactName)),
 });
