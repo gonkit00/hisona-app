@@ -45,20 +45,41 @@ export const getChats = () => async (dispatch) => {
   }
 };
 
-export const openMapThread = (artefactId, artefactName) => (dispatch) => {
+export const openMapThread = (artefactId, artefactName) => async (dispatch) => {
+  try {
+    const threadId = await ChatsService.fetchThread(artefactId);
+    if (!threadId) throw new Error('no thread id ');
+    threadId = threadId.message;
 
-// try {
-//   dispatch({ type: types.CHATS_ARTEFACTS_EXISTS });
-//   let threadId = await ThreadService.fetchThread(artefact_id);
-//   threadId = threadId.message;
-// } catch (e) {
-//
-// }
+    dispatch({ type: types.CHATS_ARTEFACTS_FETCHED });
+    const artefacts = await ChatsService.fetchArtefacts();
+    if (!artefacts) {
+      throw new Error('Artefacts fetch request failed');
+    }
+    // Normalise the artefacts
+    const artefactsById = keyByIds(artefacts);
+    dispatch({
+      type: types.CHATS_ARTEFACTS_FETCHED_SUCCESS,
+      artefactsById,
+    });
 
-  dispatch({
-    type: types.CHATS_THREAD_OPENED,
-    threadId,
-  });
+    const chats = await ChatsService.fetchChats();
+    if (!chats) {
+      throw new Error('Chats fetch request failed');
+    }
+    dispatch({
+      type: types.CHATS_FETCHED_SUCCESS,
+      chats,
+    });
+
+    dispatch({
+      type: types.CHATS_THREAD_OPENED,
+      threadId,
+    });
+  } catch (error) {
+    dispatch({ type: types.CHATS_FETCHED_FAILURE, error });
+    console.log(error);
+  }
 
   Actions.chatScreen({ title: artefactName });
 };
