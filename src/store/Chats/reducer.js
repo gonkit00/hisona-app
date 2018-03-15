@@ -69,6 +69,7 @@ export default function reduce(state = initialState, action = {}) {
         error: action.error.message,
         isLoading: false,
       });
+
     default:
       return state;
   }
