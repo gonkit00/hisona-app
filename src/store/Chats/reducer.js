@@ -70,9 +70,6 @@ export default function reduce(state = initialState, action = {}) {
         isLoading: false,
       });
 
-    // case types.CHATS_ARTEFACTS_EXISTS:
-    //   const current = getCurrentArtefactChat(state, action.artefactId);
-
     default:
       return state;
   }
