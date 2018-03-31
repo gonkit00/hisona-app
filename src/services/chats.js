@@ -6,7 +6,7 @@
 
 import config from '~/config/api';
 
-const BASE_ENDPOINT = config.prod_base_endpoint;
+const BASE_ENDPOINT = config.dev_base_endpoint;
 
 const ChatsService = {
   async fetchArtefacts() {
@@ -15,7 +15,7 @@ const ChatsService = {
     try {
       const response = await fetch(url);
 
-      console.log(response);
+      console.log('Kimba', response);
 
       if (!response.ok) {
         throw new Error(`Failed to get a response from the '${url}' endpoint`);

@@ -5,11 +5,12 @@ import thunk from 'redux-thunk';
 import * as reducers from '~/store/reducers';
 
 const configureStore = () => {
-  const logger = createLogger();
+  // const logger = createLogger();
 
   const store = createStore(
     combineReducers(reducers),
-    applyMiddleware(thunk, logger),
+    // applyMiddleware(thunk, logger),
+    applyMiddleware(thunk),
   );
 
   return store;
