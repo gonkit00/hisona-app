@@ -8,6 +8,11 @@ Hisona is a cross platform app that makes it possible for people to have a conve
 
 The purpose of Hisona is to make learning about history easier and more fun. By leveraging AI technolohies Hisona makes the history around us more accessible, engaging and a two-way conversational experience to bring historical artefacts to 'life'.
 
+## My Contribution
+
+- Geofencing feature: I implemented a feature to geofence artefacts in order to push notifications on the users devices
+- Find me: I implemented a feature/game to find artefacts by gps coordinates
+
 ## Tech Stack
 
 * React Native - Front end library for building user interfaces
