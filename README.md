@@ -27,6 +27,8 @@ The purpose of Hisona is to make learning about history easier and more fun. By 
  <img height="232px" src="https://media.giphy.com/media/5YbVc5mRXOR3fOpBNs/giphy.gif"></img>
 </div>
 
-## Contact Me
+## Contributors
 
 Cameron Jenkinson – [Linkedin](https://www.linkedin.com/in/cameronjjenkinson/)- [GitHub](https://github.com/cjjenkinson) – camjenkinson@gmail.com
+
+Marco Esposito – [Linkedin](https://www.linkedin.com/in/marco-esposito-a4b08054/) - [GitHub](https://github.com/marco-esposito) – m.espo@tiscali.it
